@@ -119,6 +119,12 @@
             border-color: #667eea;
         }
         
+        input[type="checkbox"] {
+            width: auto;
+            margin-right: 8px;
+            transform: scale(1.2);
+        }
+        
         .calculate-btn {
             width: 100%;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -269,6 +275,13 @@
                     <option value="SK">Saskatchewan</option>
                     <option value="YT">Yukon</option>
                 </select>
+            </div>
+            
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="includeSalesTax" checked>
+                    Include Sales Tax
+                </label>
             </div>
             
             <div class="form-group">
@@ -440,8 +453,8 @@
             }
         }
 
-        function runCalculation(itemCost, province, annualIncome) {
-            const salesTax = calculateSalesTax(itemCost, province);
+        function runCalculation(itemCost, province, annualIncome, includeSalesTax = true) {
+            const salesTax = includeSalesTax ? calculateSalesTax(itemCost, province) : 0;
             const salesTaxRate = getSalesTaxRate(province);
             const totalAfterTax = itemCost + salesTax;
             
@@ -471,24 +484,29 @@
             document.getElementById('hoursToWorkResult').textContent = hoursToWork.toFixed(1);
             document.getElementById('preTaxIncomeResult').textContent = `$${preTaxIncomeNeeded.toFixed(2)}`;
             
-            document.getElementById('salesTaxLabel').textContent = `Sales Tax (${salesTaxRate}%):`;
-            
-            // Sales tax breakdown
-            const rates = taxRates[province];
-            let salesBreakdownHTML = '';
-            if (rates.hst > 0) {
-                salesBreakdownHTML = `<div class="tax-breakdown-item"><span>HST (${rates.hst}%):</span><span>$${salesTax.toFixed(2)}</span></div>`;
+            if (includeSalesTax) {
+                document.getElementById('salesTaxLabel').textContent = `Sales Tax (${salesTaxRate}%):`;
+                
+                // Sales tax breakdown
+                const rates = taxRates[province];
+                let salesBreakdownHTML = '';
+                if (rates.hst > 0) {
+                    salesBreakdownHTML = `<div class="tax-breakdown-item"><span>HST (${rates.hst}%):</span><span>$${salesTax.toFixed(2)}</span></div>`;
+                } else {
+                    const gstAmount = itemCost * (rates.gst / 100);
+                    const pstAmount = itemCost * (rates.pst / 100);
+                    if (rates.gst > 0) {
+                        salesBreakdownHTML += `<div class="tax-breakdown-item"><span>GST (${rates.gst}%):</span><span>$${gstAmount.toFixed(2)}</span></div>`;
+                    }
+                    if (rates.pst > 0) {
+                        salesBreakdownHTML += `<div class="tax-breakdown-item"><span>PST (${rates.pst}%):</span><span>$${pstAmount.toFixed(2)}</span></div>`;
+                    }
+                }
+                document.getElementById('salesTaxBreakdown').innerHTML = salesBreakdownHTML;
             } else {
-                const gstAmount = itemCost * (rates.gst / 100);
-                const pstAmount = itemCost * (rates.pst / 100);
-                if (rates.gst > 0) {
-                    salesBreakdownHTML += `<div class="tax-breakdown-item"><span>GST (${rates.gst}%):</span><span>$${gstAmount.toFixed(2)}</span></div>`;
-                }
-                if (rates.pst > 0) {
-                    salesBreakdownHTML += `<div class="tax-breakdown-item"><span>PST (${rates.pst}%):</span><span>$${pstAmount.toFixed(2)}</span></div>`;
-                }
+                document.getElementById('salesTaxLabel').textContent = `Sales Tax:`;
+                document.getElementById('salesTaxBreakdown').innerHTML = '<div class="tax-breakdown-item"><span>Disabled</span></div>';
             }
-            document.getElementById('salesTaxBreakdown').innerHTML = salesBreakdownHTML;
             
             // Income tax breakdown
             let incomeBreakdownHTML = '';
@@ -501,11 +519,12 @@
             document.getElementById('results').classList.remove('hidden');
         }
 
-        function updateURL(itemCost, province, annualIncome) {
+        function updateURL(itemCost, province, annualIncome, includeSalesTax) {
             const params = new URLSearchParams();
             params.set('cost', itemCost);
             params.set('province', province);
             params.set('income', annualIncome);
+            params.set('salesTax', includeSalesTax);
             
             const newURL = window.location.pathname + '#' + params.toString();
             window.history.pushState({}, '', newURL);
@@ -517,13 +536,15 @@
             const cost = params.get('cost');
             const province = params.get('province');
             const income = params.get('income');
+            const salesTax = params.get('salesTax');
             
             if (cost && province && income) {
                 document.getElementById('itemCost').value = cost;
                 document.getElementById('province').value = province;
                 document.getElementById('income').value = income;
+                document.getElementById('includeSalesTax').checked = salesTax !== 'false';
                 
-                runCalculation(parseFloat(cost), province, parseFloat(income));
+                runCalculation(parseFloat(cost), province, parseFloat(income), salesTax !== 'false');
             }
         }
 
@@ -531,10 +552,11 @@
             const itemCost = parseFloat(document.getElementById('itemCost').value);
             const province = document.getElementById('province').value;
             const annualIncome = parseFloat(document.getElementById('income').value);
+            const includeSalesTax = document.getElementById('includeSalesTax').checked;
             
             if (itemCost && province && annualIncome) {
-                updateURL(itemCost, province, annualIncome);
-                runCalculation(itemCost, province, annualIncome);
+                updateURL(itemCost, province, annualIncome, includeSalesTax);
+                runCalculation(itemCost, province, annualIncome, includeSalesTax);
             }
         }
 
@@ -551,6 +573,7 @@
         document.getElementById('itemCost').addEventListener('input', handleFormChange);
         document.getElementById('province').addEventListener('change', handleFormChange);
         document.getElementById('income').addEventListener('input', handleFormChange);
+        document.getElementById('includeSalesTax').addEventListener('change', handleFormChange);
 
         window.addEventListener('load', loadFromURL);
     </script>
