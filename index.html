@@ -312,16 +312,25 @@
             }
         }
 
-        document.getElementById('costForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
+        function handleFormChange() {
             const itemCost = parseFloat(document.getElementById('itemCost').value);
             const province = document.getElementById('province').value;
             const annualIncome = parseFloat(document.getElementById('income').value);
             
-            updateURL(itemCost, province, annualIncome);
-            runCalculation(itemCost, province, annualIncome);
+            if (itemCost && province && annualIncome) {
+                updateURL(itemCost, province, annualIncome);
+                runCalculation(itemCost, province, annualIncome);
+            }
+        }
+
+        document.getElementById('costForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            handleFormChange();
         });
+
+        document.getElementById('itemCost').addEventListener('input', handleFormChange);
+        document.getElementById('province').addEventListener('change', handleFormChange);
+        document.getElementById('income').addEventListener('input', handleFormChange);
 
         window.addEventListener('load', loadFromURL);
     </script>
