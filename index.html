@@ -29,6 +29,38 @@
     <!-- Additional SEO -->
     <meta name="theme-color" content="#667eea">
     <meta name="application-name" content="SumCost.ca">
+    
+    <!-- GitHub and Repository Info -->
+    <meta name="repository-url" content="https://github.com/nicwaller/sumcost.ca">
+    <meta name="source-code" content="https://github.com/nicwaller/sumcost.ca">
+    
+    <!-- Language and Region -->
+    <meta name="language" content="en-CA">
+    <meta name="geo.region" content="CA">
+    
+    <!-- PWA/Mobile App -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="SumCost">
+    
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "SumCost.ca",
+        "description": "Calculate the true cost of purchases in Canada including income tax, CPP, EI, and sales tax",
+        "url": "https://sumcost.ca",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Web Browser",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "CAD"
+        },
+        "codeRepository": "https://github.com/nicwaller/sumcost.ca"
+    }
+    </script>
     <style>
         * {
             margin: 0;
@@ -185,6 +217,26 @@
         .hidden {
             display: none;
         }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e1e1e1;
+            color: #999;
+            font-size: 14px;
+        }
+        
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+        
+        .footer a:hover {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -256,6 +308,10 @@
                 <span>Pre-Tax Income Needed:</span>
                 <span id="preTaxIncomeResult">$0.00</span>
             </div>
+        </div>
+        
+        <div class="footer">
+            <p>Open source • <a href="https://github.com/nicwaller/sumcost.ca" target="_blank" rel="noopener">View on GitHub</a></p>
         </div>
     </div>
 
