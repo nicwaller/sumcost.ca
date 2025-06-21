@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SumCost.ca - True Cost Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e1e1;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .calculate-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .results {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 5px 0;
+        }
+        
+        .result-row:last-child {
+            margin-bottom: 0;
+            border-top: 2px solid #ddd;
+            padding-top: 15px;
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SumCost.ca</h1>
+        <p style="text-align: center; color: #666; margin-bottom: 30px;">Calculate the true cost of your purchases</p>
+        
+        <form id="costForm">
+            <div class="form-group">
+                <label for="itemCost">Item Cost ($)</label>
+                <input type="number" id="itemCost" step="0.01" min="0" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="province">Province</label>
+                <select id="province" required>
+                    <option value="">Select your province</option>
+                    <option value="AB">Alberta</option>
+                    <option value="BC">British Columbia</option>
+                    <option value="MB">Manitoba</option>
+                    <option value="NB">New Brunswick</option>
+                    <option value="NL">Newfoundland and Labrador</option>
+                    <option value="NT">Northwest Territories</option>
+                    <option value="NS">Nova Scotia</option>
+                    <option value="NU">Nunavut</option>
+                    <option value="ON">Ontario</option>
+                    <option value="PE">Prince Edward Island</option>
+                    <option value="QC">Quebec</option>
+                    <option value="SK">Saskatchewan</option>
+                    <option value="YT">Yukon</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="income">Annual Income ($)</label>
+                <input type="number" id="income" min="0" required>
+            </div>
+            
+            <button type="submit" class="calculate-btn">Calculate True Cost</button>
+        </form>
+        
+        <div id="results" class="results hidden">
+            <div class="result-row">
+                <span>Item Cost:</span>
+                <span id="itemCostResult">$0.00</span>
+            </div>
+            <div class="result-row">
+                <span>Sales Tax:</span>
+                <span id="salesTaxResult">$0.00</span>
+            </div>
+            <div class="result-row">
+                <span>Total After Tax:</span>
+                <span id="totalAfterTaxResult">$0.00</span>
+            </div>
+            <div class="result-row">
+                <span>Hours to Work:</span>
+                <span id="hoursToWorkResult">0.0</span>
+            </div>
+            <div class="result-row">
+                <span>Pre-Tax Income Needed:</span>
+                <span id="preTaxIncomeResult">$0.00</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const taxRates = {
+            'AB': { gst: 5, pst: 0, hst: 0 },
+            'BC': { gst: 5, pst: 7, hst: 0 },
+            'MB': { gst: 5, pst: 7, hst: 0 },
+            'NB': { gst: 0, pst: 0, hst: 15 },
+            'NL': { gst: 0, pst: 0, hst: 15 },
+            'NT': { gst: 5, pst: 0, hst: 0 },
+            'NS': { gst: 0, pst: 0, hst: 15 },
+            'NU': { gst: 5, pst: 0, hst: 0 },
+            'ON': { gst: 0, pst: 0, hst: 13 },
+            'PE': { gst: 0, pst: 0, hst: 15 },
+            'QC': { gst: 5, pst: 9.975, hst: 0 },
+            'SK': { gst: 5, pst: 6, hst: 0 },
+            'YT': { gst: 5, pst: 0, hst: 0 }
+        };
+
+        const incomeTaxBrackets = {
+            federal: [
+                { min: 0, max: 55867, rate: 0.15 },
+                { min: 55867, max: 111733, rate: 0.205 },
+                { min: 111733, max: 173205, rate: 0.26 },
+                { min: 173205, max: 246752, rate: 0.29 },
+                { min: 246752, max: Infinity, rate: 0.33 }
+            ],
+            provincial: {
+                'AB': [
+                    { min: 0, max: 148269, rate: 0.10 },
+                    { min: 148269, max: 177922, rate: 0.12 },
+                    { min: 177922, max: 237675, rate: 0.13 },
+                    { min: 237675, max: 355513, rate: 0.14 },
+                    { min: 355513, max: Infinity, rate: 0.15 }
+                ],
+                'BC': [
+                    { min: 0, max: 47937, rate: 0.0506 },
+                    { min: 47937, max: 95875, rate: 0.077 },
+                    { min: 95875, max: 110076, rate: 0.105 },
+                    { min: 110076, max: 133664, rate: 0.1229 },
+                    { min: 133664, max: 181232, rate: 0.147 },
+                    { min: 181232, max: Infinity, rate: 0.168 }
+                ],
+                'ON': [
+                    { min: 0, max: 51446, rate: 0.0505 },
+                    { min: 51446, max: 102894, rate: 0.0915 },
+                    { min: 102894, max: 150000, rate: 0.1116 },
+                    { min: 150000, max: 220000, rate: 0.1216 },
+                    { min: 220000, max: Infinity, rate: 0.1316 }
+                ],
+                'QC': [
+                    { min: 0, max: 49275, rate: 0.14 },
+                    { min: 49275, max: 98540, rate: 0.19 },
+                    { min: 98540, max: 119910, rate: 0.24 },
+                    { min: 119910, max: Infinity, rate: 0.2575 }
+                ]
+            }
+        };
+
+        function calculateTax(income, brackets) {
+            let tax = 0;
+            for (const bracket of brackets) {
+                if (income > bracket.min) {
+                    const taxableInBracket = Math.min(income - bracket.min, bracket.max - bracket.min);
+                    tax += taxableInBracket * bracket.rate;
+                }
+            }
+            return tax;
+        }
+
+        function calculateAfterTaxIncome(grossIncome, province) {
+            const federalTax = calculateTax(grossIncome, incomeTaxBrackets.federal);
+            let provincialTax = 0;
+            
+            if (incomeTaxBrackets.provincial[province]) {
+                provincialTax = calculateTax(grossIncome, incomeTaxBrackets.provincial[province]);
+            } else {
+                provincialTax = grossIncome * 0.10;
+            }
+            
+            return grossIncome - federalTax - provincialTax;
+        }
+
+        function calculateSalesTax(amount, province) {
+            const rates = taxRates[province];
+            if (rates.hst > 0) {
+                return amount * (rates.hst / 100);
+            } else {
+                return amount * ((rates.gst + rates.pst) / 100);
+            }
+        }
+
+        document.getElementById('costForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const itemCost = parseFloat(document.getElementById('itemCost').value);
+            const province = document.getElementById('province').value;
+            const annualIncome = parseFloat(document.getElementById('income').value);
+            
+            const salesTax = calculateSalesTax(itemCost, province);
+            const totalAfterTax = itemCost + salesTax;
+            
+            const afterTaxIncome = calculateAfterTaxIncome(annualIncome, province);
+            const hourlyAfterTaxIncome = afterTaxIncome / (40 * 52);
+            const hoursToWork = totalAfterTax / hourlyAfterTaxIncome;
+            
+            const preTaxIncomeNeeded = (totalAfterTax / afterTaxIncome) * annualIncome;
+            
+            document.getElementById('itemCostResult').textContent = `$${itemCost.toFixed(2)}`;
+            document.getElementById('salesTaxResult').textContent = `$${salesTax.toFixed(2)}`;
+            document.getElementById('totalAfterTaxResult').textContent = `$${totalAfterTax.toFixed(2)}`;
+            document.getElementById('hoursToWorkResult').textContent = hoursToWork.toFixed(1);
+            document.getElementById('preTaxIncomeResult').textContent = `$${preTaxIncomeNeeded.toFixed(2)}`;
+            
+            document.getElementById('results').classList.remove('hidden');
+        });
+    </script>
+</body>
+</html>
