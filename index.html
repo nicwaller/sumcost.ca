@@ -78,13 +78,60 @@
             padding: 40px 20px;
         }
         
-        .container {
+        
+        .app-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            width: 100%;
+            max-width: 500px;
+        }
+        
+        .form-section {
             background: white;
             border-radius: 20px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.1);
             padding: 40px;
-            max-width: 500px;
-            width: 100%;
+            flex: 1;
+        }
+        
+        .results-section {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            flex: 1;
+        }
+        
+        @media (orientation: landscape) and (min-width: 800px) {
+            .app-layout {
+                flex-direction: row;
+                max-width: 1200px;
+                gap: 40px;
+            }
+            
+            .form-section {
+                max-width: 500px;
+            }
+            
+            .results-section {
+                max-width: 600px;
+            }
+            
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 20px 10px;
+            }
+            
+            .form-section, .results-section {
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 1.5em;
+            }
         }
         
         h1 {
@@ -169,7 +216,6 @@
         }
         
         .results {
-            margin-top: 30px;
             padding: 20px;
             background: #f8f9fa;
             border-radius: 12px;
@@ -247,90 +293,99 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>SumCost.ca</h1>
-        <p style="text-align: center; color: #666; margin-bottom: 30px;">Calculate the true cost of your purchases</p>
-        
-        <form id="costForm">
-            <div class="form-group">
-                <label for="itemCost">Item Cost ($)</label>
-                <input type="number" id="itemCost" step="0.01" min="0" inputmode="decimal" required>
-            </div>
+    <div class="app-layout">
+        <div class="form-section">
+            <h1>SumCost.ca</h1>
+            <p style="text-align: center; color: #666; margin-bottom: 30px;">Calculate the true cost of your purchases</p>
             
-            <div class="form-group">
-                <label for="province">Province</label>
-                <select id="province" required>
-                    <option value="">Select your province</option>
-                    <option value="AB">Alberta</option>
-                    <option value="BC" selected>British Columbia</option>
-                    <option value="MB">Manitoba</option>
-                    <option value="NB">New Brunswick</option>
-                    <option value="NL">Newfoundland and Labrador</option>
-                    <option value="NT">Northwest Territories</option>
-                    <option value="NS">Nova Scotia</option>
-                    <option value="NU">Nunavut</option>
-                    <option value="ON">Ontario</option>
-                    <option value="PE">Prince Edward Island</option>
-                    <option value="QC">Quebec</option>
-                    <option value="SK">Saskatchewan</option>
-                    <option value="YT">Yukon</option>
-                </select>
-            </div>
+            <form id="costForm">
+                <div class="form-group">
+                    <label for="itemCost">Item Cost ($)</label>
+                    <input type="number" id="itemCost" step="0.01" min="0" inputmode="decimal" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="province">Province</label>
+                    <select id="province" required>
+                        <option value="">Select your province</option>
+                        <option value="AB">Alberta</option>
+                        <option value="BC" selected>British Columbia</option>
+                        <option value="MB">Manitoba</option>
+                        <option value="NB">New Brunswick</option>
+                        <option value="NL">Newfoundland and Labrador</option>
+                        <option value="NT">Northwest Territories</option>
+                        <option value="NS">Nova Scotia</option>
+                        <option value="NU">Nunavut</option>
+                        <option value="ON">Ontario</option>
+                        <option value="PE">Prince Edward Island</option>
+                        <option value="QC">Quebec</option>
+                        <option value="SK">Saskatchewan</option>
+                        <option value="YT">Yukon</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="includeSalesTax" checked>
+                        Include Sales Tax
+                    </label>
+                </div>
+                
+                <div class="form-group">
+                    <label for="income">Annual Income ($)</label>
+                    <input type="number" id="income" min="0" inputmode="numeric" required>
+                </div>
+                
+                <button type="submit" class="calculate-btn">Calculate True Cost</button>
+            </form>
             
-            <div class="form-group">
-                <label>
-                    <input type="checkbox" id="includeSalesTax" checked>
-                    Include Sales Tax
-                </label>
-            </div>
-            
-            <div class="form-group">
-                <label for="income">Annual Income ($)</label>
-                <input type="number" id="income" min="0" inputmode="numeric" required>
-            </div>
-            
-            <button type="submit" class="calculate-btn">Calculate True Cost</button>
-        </form>
-        
-        <div id="results" class="results hidden">
-            <div class="result-row">
-                <span>Item Cost:</span>
-                <span id="itemCostResult">$0.00</span>
-            </div>
-            <div class="result-row">
-                <details>
-                    <summary>
-                        <span id="salesTaxLabel">Sales Tax:</span>
-                        <span id="salesTaxResult">$0.00</span>
-                    </summary>
-                    <div id="salesTaxBreakdown"></div>
-                </details>
-            </div>
-            <div class="result-row">
-                <details>
-                    <summary>
-                        <span>Income Tax:</span>
-                        <span id="incomeTaxResult">$0.00</span>
-                    </summary>
-                    <div id="incomeTaxBreakdown"></div>
-                </details>
-            </div>
-            <div class="result-row">
-                <span>Total After Tax:</span>
-                <span id="totalAfterTaxResult">$0.00</span>
-            </div>
-            <div class="result-row">
-                <span>Hours to Work:</span>
-                <span id="hoursToWorkResult">0.0</span>
-            </div>
-            <div class="result-row">
-                <span>Pre-Tax Income Needed:</span>
-                <span id="preTaxIncomeResult">$0.00</span>
+            <div class="footer">
+                <p>Open source • <a href="https://github.com/nicwaller/sumcost.ca" target="_blank" rel="noopener">View on GitHub</a></p>
             </div>
         </div>
         
-        <div class="footer">
-            <p>Open source • <a href="https://github.com/nicwaller/sumcost.ca" target="_blank" rel="noopener">View on GitHub</a></p>
+        <div class="results-section">
+            <div id="results" class="results hidden">
+                <h2 style="text-align: center; color: #333; margin-bottom: 25px; font-size: 1.5em;">Calculation Results</h2>
+                <div class="result-row">
+                    <span>Item Cost:</span>
+                    <span id="itemCostResult">$0.00</span>
+                </div>
+                <div class="result-row">
+                    <details>
+                        <summary>
+                            <span id="salesTaxLabel">Sales Tax:</span>
+                            <span id="salesTaxResult">$0.00</span>
+                        </summary>
+                        <div id="salesTaxBreakdown"></div>
+                    </details>
+                </div>
+                <div class="result-row">
+                    <details>
+                        <summary>
+                            <span>Income Tax:</span>
+                            <span id="incomeTaxResult">$0.00</span>
+                        </summary>
+                        <div id="incomeTaxBreakdown"></div>
+                    </details>
+                </div>
+                <div class="result-row">
+                    <span>Total After Tax:</span>
+                    <span id="totalAfterTaxResult">$0.00</span>
+                </div>
+                <div class="result-row">
+                    <span>Hours to Work:</span>
+                    <span id="hoursToWorkResult">0.0</span>
+                </div>
+                <div class="result-row">
+                    <span>Pre-Tax Income Needed:</span>
+                    <span id="preTaxIncomeResult">$0.00</span>
+                </div>
+            </div>
+            <div id="resultsPlaceholder" class="results">
+                <h2 style="text-align: center; color: #333; margin-bottom: 25px; font-size: 1.5em;">Calculation Results</h2>
+                <p style="text-align: center; color: #999; font-style: italic;">Fill out the form to see your calculation results here</p>
+            </div>
         </div>
     </div>
 
@@ -517,6 +572,7 @@
             document.getElementById('incomeTaxBreakdown').innerHTML = incomeBreakdownHTML;
             
             document.getElementById('results').classList.remove('hidden');
+            document.getElementById('resultsPlaceholder').classList.add('hidden');
         }
 
         function updateURL(itemCost, province, annualIncome, includeSalesTax) {
@@ -576,6 +632,23 @@
         document.getElementById('includeSalesTax').addEventListener('change', handleFormChange);
 
         window.addEventListener('load', loadFromURL);
+        
+        function handleDetailsExpansion() {
+            const isLandscape = window.matchMedia('(orientation: landscape) and (min-width: 800px)').matches;
+            const detailsElements = document.querySelectorAll('details');
+            
+            detailsElements.forEach(details => {
+                if (isLandscape) {
+                    details.setAttribute('open', '');
+                } else {
+                    details.removeAttribute('open');
+                }
+            });
+        }
+        
+        window.addEventListener('resize', handleDetailsExpansion);
+        window.addEventListener('orientationchange', handleDetailsExpansion);
+        window.addEventListener('load', handleDetailsExpansion);
     </script>
 </body>
 </html>
