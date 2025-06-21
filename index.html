@@ -243,6 +243,23 @@
             return tax;
         }
 
+        function calculateCPP(grossIncome) {
+            const cppMaxPensionable = 68500;
+            const cppBasicExemption = 3500;
+            const cppRate = 0.0595;
+            
+            const pensionableIncome = Math.min(grossIncome, cppMaxPensionable) - cppBasicExemption;
+            return Math.max(0, pensionableIncome * cppRate);
+        }
+
+        function calculateEI(grossIncome) {
+            const eiMaxInsurable = 66600;
+            const eiRate = 0.0229;
+            
+            const insurableIncome = Math.min(grossIncome, eiMaxInsurable);
+            return insurableIncome * eiRate;
+        }
+
         function calculateAfterTaxIncome(grossIncome, province) {
             const federalTax = calculateTax(grossIncome, incomeTaxBrackets.federal);
             let provincialTax = 0;
@@ -253,7 +270,10 @@
                 provincialTax = grossIncome * 0.10;
             }
             
-            return grossIncome - federalTax - provincialTax;
+            const cppContribution = calculateCPP(grossIncome);
+            const eiContribution = calculateEI(grossIncome);
+            
+            return grossIncome - federalTax - provincialTax - cppContribution - eiContribution;
         }
 
         function calculateSalesTax(amount, province) {
@@ -265,8 +285,18 @@
             }
         }
 
+        function getSalesTaxRate(province) {
+            const rates = taxRates[province];
+            if (rates.hst > 0) {
+                return rates.hst;
+            } else {
+                return rates.gst + rates.pst;
+            }
+        }
+
         function runCalculation(itemCost, province, annualIncome) {
             const salesTax = calculateSalesTax(itemCost, province);
+            const salesTaxRate = getSalesTaxRate(province);
             const totalAfterTax = itemCost + salesTax;
             
             const afterTaxIncome = calculateAfterTaxIncome(annualIncome, province);
@@ -283,6 +313,8 @@
             document.getElementById('totalAfterTaxResult').textContent = `$${totalAfterTax.toFixed(2)}`;
             document.getElementById('hoursToWorkResult').textContent = hoursToWork.toFixed(1);
             document.getElementById('preTaxIncomeResult').textContent = `$${preTaxIncomeNeeded.toFixed(2)}`;
+            
+            document.querySelector('.result-row:nth-child(2) span:first-child').textContent = `Sales Tax (${salesTaxRate}%)`;
             
             document.getElementById('results').classList.remove('hidden');
         }
