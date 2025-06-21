@@ -265,13 +265,7 @@
             }
         }
 
-        document.getElementById('costForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const itemCost = parseFloat(document.getElementById('itemCost').value);
-            const province = document.getElementById('province').value;
-            const annualIncome = parseFloat(document.getElementById('income').value);
-            
+        function runCalculation(itemCost, province, annualIncome) {
             const salesTax = calculateSalesTax(itemCost, province);
             const totalAfterTax = itemCost + salesTax;
             
@@ -291,7 +285,45 @@
             document.getElementById('preTaxIncomeResult').textContent = `$${preTaxIncomeNeeded.toFixed(2)}`;
             
             document.getElementById('results').classList.remove('hidden');
+        }
+
+        function updateURL(itemCost, province, annualIncome) {
+            const params = new URLSearchParams();
+            params.set('cost', itemCost);
+            params.set('province', province);
+            params.set('income', annualIncome);
+            
+            const newURL = window.location.pathname + '?' + params.toString();
+            window.history.pushState({}, '', newURL);
+        }
+
+        function loadFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            const cost = params.get('cost');
+            const province = params.get('province');
+            const income = params.get('income');
+            
+            if (cost && province && income) {
+                document.getElementById('itemCost').value = cost;
+                document.getElementById('province').value = province;
+                document.getElementById('income').value = income;
+                
+                runCalculation(parseFloat(cost), province, parseFloat(income));
+            }
+        }
+
+        document.getElementById('costForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const itemCost = parseFloat(document.getElementById('itemCost').value);
+            const province = document.getElementById('province').value;
+            const annualIncome = parseFloat(document.getElementById('income').value);
+            
+            updateURL(itemCost, province, annualIncome);
+            runCalculation(itemCost, province, annualIncome);
         });
+
+        window.addEventListener('load', loadFromURL);
     </script>
 </body>
 </html>
