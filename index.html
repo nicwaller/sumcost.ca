@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>SumCost.ca - True Cost Calculator for Canadian Taxes</title>
     <meta name="description" content="Calculate the true cost of purchases in Canada including income tax, CPP, EI, and sales tax. See how much you need to earn before taxes to afford any purchase.">
     <meta name="keywords" content="Canadian tax calculator, income tax, sales tax, GST, PST, HST, CPP, EI, cost calculator, true cost, Canada">
@@ -108,7 +108,8 @@
             flex-direction: column;
             align-items: flex-start;
             justify-content: center;
-            padding: 0;
+            padding-left: env(safe-area-inset-left, 0);
+            padding-right: env(safe-area-inset-right, 0);
         }
         
         
@@ -119,7 +120,8 @@
             justify-content: center;
             gap: 30px;
             width: 100%;
-            padding: 2em;
+            padding-top: 2em;
+            padding-bottom: 2em;
             section {
                 flex-grow: 1;
             }
