@@ -157,6 +157,10 @@
                 <span id="salesTaxResult">$0.00</span>
             </div>
             <div class="result-row">
+                <span>Income Tax:</span>
+                <span id="incomeTaxResult">$0.00</span>
+            </div>
+            <div class="result-row">
                 <span>Total After Tax:</span>
                 <span id="totalAfterTaxResult">$0.00</span>
             </div>
@@ -272,13 +276,16 @@
             const totalAfterTax = itemCost + salesTax;
             
             const afterTaxIncome = calculateAfterTaxIncome(annualIncome, province);
+            const totalTaxOnIncome = annualIncome - afterTaxIncome;
             const hourlyAfterTaxIncome = afterTaxIncome / (40 * 52);
             const hoursToWork = totalAfterTax / hourlyAfterTaxIncome;
             
             const preTaxIncomeNeeded = (totalAfterTax / afterTaxIncome) * annualIncome;
+            const incomeTaxOnNeeded = preTaxIncomeNeeded - (preTaxIncomeNeeded / annualIncome * afterTaxIncome);
             
             document.getElementById('itemCostResult').textContent = `$${itemCost.toFixed(2)}`;
             document.getElementById('salesTaxResult').textContent = `$${salesTax.toFixed(2)}`;
+            document.getElementById('incomeTaxResult').textContent = `$${incomeTaxOnNeeded.toFixed(2)}`;
             document.getElementById('totalAfterTaxResult').textContent = `$${totalAfterTax.toFixed(2)}`;
             document.getElementById('hoursToWorkResult').textContent = hoursToWork.toFixed(1);
             document.getElementById('preTaxIncomeResult').textContent = `$${preTaxIncomeNeeded.toFixed(2)}`;
