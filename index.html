@@ -638,6 +638,17 @@
             }
         }
 
+        function saveProvinceToStorage(province) {
+            localStorage.setItem('sumcost-province', province);
+        }
+
+        function loadProvinceFromStorage() {
+            const savedProvince = localStorage.getItem('sumcost-province');
+            if (savedProvince) {
+                document.getElementById('province').value = savedProvince;
+            }
+        }
+
         function handleFormChange() {
             const itemCost = parseFloat(document.getElementById('itemCost').value);
             const province = document.getElementById('province').value;
@@ -646,6 +657,10 @@
             
             if (annualIncome) {
                 saveIncomeToStorage(annualIncome);
+            }
+            
+            if (province) {
+                saveProvinceToStorage(province);
             }
             
             if (itemCost && province && annualIncome) {
@@ -671,6 +686,7 @@
 
         window.addEventListener('load', function() {
             loadIncomeFromStorage();
+            loadProvinceFromStorage();
             loadFromURL();
         });
         
