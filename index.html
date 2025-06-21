@@ -269,30 +269,28 @@
             display: none;
         }
         
-        .footer {
+        footer {
             text-align: center;
             margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #e1e1e1;
-            color: #999;
+            padding: 20px;
+            color: rgba(255, 255, 255, 0.8);
             font-size: 14px;
         }
         
-        .footer a {
-            color: #667eea;
+        footer a {
+            color: rgba(255, 255, 255, 0.9);
             text-decoration: none;
-            opacity: 0.8;
-            transition: opacity 0.3s;
+            transition: color 0.3s;
         }
         
-        .footer a:hover {
-            opacity: 1;
+        footer a:hover {
+            color: white;
         }
     </style>
 </head>
 <body>
-    <div class="app-layout">
-        <div class="form-section">
+    <main class="app-layout">
+        <section class="form-section">
             <h1>SumCost.ca</h1>
             <p style="text-align: center; color: #666; margin-bottom: 30px;">Calculate the true cost of your purchases</p>
             
@@ -337,12 +335,9 @@
                 <button type="submit" class="calculate-btn">Calculate True Cost</button>
             </form>
             
-            <div class="footer">
-                <p>Open source • <a href="https://github.com/nicwaller/sumcost.ca" target="_blank" rel="noopener">View on GitHub</a></p>
-            </div>
-        </div>
+        </section>
         
-        <div class="results-section">
+        <section class="results-section">
             <div id="results" class="results hidden">
                 <div class="result-row">
                     <span>Item Cost:</span>
@@ -383,8 +378,12 @@
                 <h2 style="text-align: center; color: #333; margin-bottom: 25px; font-size: 1.5em;">Calculation Results</h2>
                 <p style="text-align: center; color: #999; font-style: italic;">Fill out the form to see your calculation results here</p>
             </div>
-        </div>
-    </div>
+        </section>
+    </main>
+    
+    <footer class="footer">
+        <p>Open source • <a href="https://github.com/nicwaller/sumcost.ca" target="_blank" rel="noopener">View on GitHub</a></p>
+    </footer>
 
     <script>
         const taxRates = {
