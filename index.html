@@ -79,6 +79,32 @@
             transform: translateY(-2px);
         }
         
+        .flourish {
+            animation: valueFlourish 0.8s ease-out;
+        }
+        
+        @keyframes valueFlourish {
+            0% {
+                transform: scale(1);
+                color: inherit;
+            }
+            25% {
+                transform: scale(1.1);
+                color: #667eea;
+                text-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+            }
+            75% {
+                transform: scale(1.05);
+                color: #667eea;
+                text-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
+            }
+            100% {
+                transform: scale(1);
+                color: inherit;
+                text-shadow: none;
+            }
+        }
+        
         .results {
             margin-top: 30px;
             padding: 20px;
@@ -407,7 +433,12 @@
 
         document.getElementById('costForm').addEventListener('submit', function(e) {
             e.preventDefault();
+            
             handleFormChange();
+            
+            const preTaxElement = document.getElementById('preTaxIncomeResult');
+            preTaxElement.classList.add('flourish');
+            setTimeout(() => preTaxElement.classList.remove('flourish'), 800);
         });
 
         document.getElementById('itemCost').addEventListener('input', handleFormChange);
