@@ -103,6 +103,44 @@
             font-size: 1.1em;
         }
         
+        details {
+            width: 100%;
+        }
+        
+        summary {
+            display: flex;
+            justify-content: space-between;
+            cursor: pointer;
+            list-style: none;
+            padding: 5px 0;
+        }
+        
+        summary::-webkit-details-marker {
+            display: none;
+        }
+        
+        summary::before {
+            content: "▶";
+            margin-right: 8px;
+            transition: transform 0.2s;
+        }
+        
+        details[open] summary::before {
+            transform: rotate(90deg);
+        }
+        
+        #salesTaxBreakdown {
+            padding: 10px 0 0 20px;
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        .tax-breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        
         .hidden {
             display: none;
         }
@@ -153,8 +191,13 @@
                 <span id="itemCostResult">$0.00</span>
             </div>
             <div class="result-row">
-                <span>Sales Tax:</span>
-                <span id="salesTaxResult">$0.00</span>
+                <details>
+                    <summary>
+                        <span id="salesTaxLabel">Sales Tax:</span>
+                        <span id="salesTaxResult">$0.00</span>
+                    </summary>
+                    <div id="salesTaxBreakdown"></div>
+                </details>
             </div>
             <div class="result-row">
                 <span>Income Tax:</span>
@@ -314,7 +357,23 @@
             document.getElementById('hoursToWorkResult').textContent = hoursToWork.toFixed(1);
             document.getElementById('preTaxIncomeResult').textContent = `$${preTaxIncomeNeeded.toFixed(2)}`;
             
-            document.querySelector('.result-row:nth-child(2) span:first-child').textContent = `Sales Tax (${salesTaxRate}%)`;
+            document.getElementById('salesTaxLabel').textContent = `Sales Tax (${salesTaxRate}%):`;
+            
+            const rates = taxRates[province];
+            let breakdownHTML = '';
+            if (rates.hst > 0) {
+                breakdownHTML = `<div class="tax-breakdown-item"><span>HST (${rates.hst}%):</span><span>$${salesTax.toFixed(2)}</span></div>`;
+            } else {
+                const gstAmount = itemCost * (rates.gst / 100);
+                const pstAmount = itemCost * (rates.pst / 100);
+                if (rates.gst > 0) {
+                    breakdownHTML += `<div class="tax-breakdown-item"><span>GST (${rates.gst}%):</span><span>$${gstAmount.toFixed(2)}</span></div>`;
+                }
+                if (rates.pst > 0) {
+                    breakdownHTML += `<div class="tax-breakdown-item"><span>PST (${rates.pst}%):</span><span>$${pstAmount.toFixed(2)}</span></div>`;
+                }
+            }
+            document.getElementById('salesTaxBreakdown').innerHTML = breakdownHTML;
             
             document.getElementById('results').classList.remove('hidden');
         }
