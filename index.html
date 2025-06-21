@@ -170,7 +170,7 @@
         <form id="costForm">
             <div class="form-group">
                 <label for="itemCost">Item Cost ($)</label>
-                <input type="number" id="itemCost" step="0.01" min="0" required>
+                <input type="number" id="itemCost" step="0.01" min="0" inputmode="decimal" required>
             </div>
             
             <div class="form-group">
@@ -195,7 +195,7 @@
             
             <div class="form-group">
                 <label for="income">Annual Income ($)</label>
-                <input type="number" id="income" min="0" required>
+                <input type="number" id="income" min="0" inputmode="numeric" required>
             </div>
             
             <button type="submit" class="calculate-btn">Calculate True Cost</button>
