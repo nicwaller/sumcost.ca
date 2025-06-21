@@ -73,53 +73,44 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
+            flex-direction: column;
             align-items: flex-start;
             justify-content: center;
-            padding: 40px 20px;
+            padding: 0;
         }
         
         
-        .app-layout {
+        main {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
             gap: 30px;
             width: 100%;
-            max-width: 500px;
         }
-        
+
+        /*@media (orientation: landscape) and (min-width: 800px) {*/
+        /*    main {*/
+        /*        flex-direction: row;*/
+        /*    }*/
+        /*}*/
+
         .form-section {
+            min-width: 20em;
             background: white;
             border-radius: 20px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.1);
             padding: 40px;
-            flex: 1;
         }
         
         .results-section {
+            min-width: 20em;
             background: white;
             border-radius: 20px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.1);
             padding: 40px;
-            flex: 1;
         }
-        
-        @media (orientation: landscape) and (min-width: 800px) {
-            .app-layout {
-                flex-direction: row;
-                max-width: 1200px;
-                gap: 40px;
-            }
-            
-            .form-section {
-                max-width: 500px;
-            }
-            
-            .results-section {
-                max-width: 600px;
-            }
-            
-        }
-        
+
         @media (max-width: 480px) {
             body {
                 padding: 20px 10px;
@@ -270,26 +261,19 @@
         }
         
         footer {
+            width: 100%;
             text-align: center;
-            margin-top: 30px;
-            padding: 20px;
-            color: rgba(255, 255, 255, 0.8);
+            margin-top: 1em;
+            padding: 1em;
             font-size: 14px;
-        }
-        
-        footer a {
-            color: rgba(255, 255, 255, 0.9);
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-        
-        footer a:hover {
-            color: white;
+            a {
+                color: inherit;
+            }
         }
     </style>
 </head>
 <body>
-    <main class="app-layout">
+    <main>
         <section class="form-section">
             <h1>SumCost.ca</h1>
             <p style="text-align: center; color: #666; margin-bottom: 30px;">Calculate the true cost of your purchases</p>
@@ -380,7 +364,7 @@
             </div>
         </section>
     </main>
-    
+
     <footer class="footer">
         <p>Open source • <a href="https://github.com/nicwaller/sumcost.ca" target="_blank" rel="noopener">View on GitHub</a></p>
     </footer>
