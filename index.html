@@ -325,12 +325,13 @@
             params.set('province', province);
             params.set('income', annualIncome);
             
-            const newURL = window.location.pathname + '?' + params.toString();
+            const newURL = window.location.pathname + '#' + params.toString();
             window.history.pushState({}, '', newURL);
         }
 
         function loadFromURL() {
-            const params = new URLSearchParams(window.location.search);
+            const hash = window.location.hash.substring(1);
+            const params = new URLSearchParams(hash);
             const cost = params.get('cost');
             const province = params.get('province');
             const income = params.get('income');
