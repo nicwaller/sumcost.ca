@@ -62,6 +62,38 @@
     }
     </script>
     <style>
+        :root {
+            --bg-gradient-start: #667eea;
+            --bg-gradient-end: #764ba2;
+            --card-bg: white;
+            --card-shadow: rgba(0,0,0,0.1);
+            --text-primary: #333;
+            --text-secondary: #555;
+            --text-muted: #666;
+            --text-placeholder: #999;
+            --border-color: #e1e1e1;
+            --border-focus: #667eea;
+            --border-separator: #ddd;
+            --border-dotted: #ccc;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-gradient-start: #2d3748;
+                --bg-gradient-end: #4a5568;
+                --card-bg: #1a202c;
+                --card-shadow: rgba(0,0,0,0.3);
+                --text-primary: #f7fafc;
+                --text-secondary: #a0aec0;
+                --text-muted: #a0aec0;
+                --text-placeholder: #a0aec0;
+                --border-color: #4a5568;
+                --border-focus: #4299e1;
+                --border-separator: #4a5568;
+                --border-dotted: #718096;
+            }
+        }
+        
         * {
             margin: 0;
             padding: 0;
@@ -70,7 +102,7 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -101,17 +133,17 @@
 
         .form-section {
             min-width: 20em;
-            background: white;
+            background: var(--card-bg);
             border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            box-shadow: 0 20px 40px var(--card-shadow);
             padding: 40px;
         }
         
         .results-section {
             min-width: 20em;
-            background: white;
+            background: var(--card-bg);
             border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            box-shadow: 0 20px 40px var(--card-shadow);
             padding: 40px;
         }
 
@@ -131,7 +163,7 @@
         
         h1 {
             text-align: center;
-            color: #333;
+            color: var(--text-primary);
             margin-bottom: 30px;
             font-size: 2em;
         }
@@ -144,21 +176,23 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
-            color: #555;
+            color: var(--text-secondary);
         }
         
         input, select {
             width: 100%;
             padding: 12px;
-            border: 2px solid #e1e1e1;
+            border: 2px solid var(--border-color);
             border-radius: 8px;
             font-size: 16px;
             transition: border-color 0.3s;
+            background: var(--card-bg);
+            color: var(--text-primary);
         }
         
         input:focus, select:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: var(--border-focus);
         }
         
         input[type="checkbox"] {
@@ -222,9 +256,13 @@
             padding: 5px 0;
         }
         
+        .result-row {
+            color: var(--text-primary);
+        }
+        
         .result-row:last-child {
             margin-bottom: 0;
-            border-top: 2px solid #ddd;
+            border-top: 2px solid var(--border-separator);
             padding-top: 15px;
             margin-top: 15px;
             font-weight: bold;
@@ -241,7 +279,7 @@
             cursor: pointer;
             list-style: none;
             padding: 2px 0;
-            border-bottom: 1px dotted #ccc;
+            border-bottom: 1px dotted var(--border-dotted);
         }
         
         summary::-webkit-details-marker {
@@ -251,7 +289,7 @@
         #salesTaxBreakdown, #incomeTaxBreakdown {
             padding: 10px 0 0 20px;
             font-size: 0.9em;
-            color: #666;
+            color: var(--text-muted);
         }
         
         .tax-breakdown-item {
@@ -270,6 +308,7 @@
             margin-top: 1em;
             padding: 1em;
             font-size: 14px;
+            color: var(--text-secondary);
             a {
                 color: inherit;
             }
@@ -280,7 +319,7 @@
     <main>
         <section class="form-section">
             <h1>SumCost.ca</h1>
-            <p style="text-align: center; color: #666; margin-bottom: 30px;">Calculate the true cost of your purchases</p>
+            <p style="text-align: center; color: var(--text-muted); margin-bottom: 30px;">Calculate the true cost of your purchases</p>
             
             <form id="costForm">
                 <div class="form-group">
@@ -363,8 +402,8 @@
                 </div>
             </div>
             <div id="resultsPlaceholder" class="results">
-                <h2 style="text-align: center; color: #333; margin-bottom: 25px; font-size: 1.5em;">Calculation Results</h2>
-                <p style="text-align: center; color: #999; font-style: italic;">Fill out the form to see your calculation results here</p>
+                <h2 style="text-align: center; color: var(--text-primary); margin-bottom: 25px; font-size: 1.5em;">Calculation Results</h2>
+                <p style="text-align: center; color: var(--text-placeholder); font-style: italic;">Fill out the form to see your calculation results here</p>
             </div>
         </section>
     </main>
