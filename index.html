@@ -202,7 +202,7 @@
             display: none;
         }
         
-        #salesTaxBreakdown {
+        #salesTaxBreakdown, #incomeTaxBreakdown {
             padding: 10px 0 0 20px;
             font-size: 0.9em;
             color: #666;
@@ -293,8 +293,13 @@
                 </details>
             </div>
             <div class="result-row">
-                <span>Income Tax:</span>
-                <span id="incomeTaxResult">$0.00</span>
+                <details>
+                    <summary>
+                        <span>Income Tax:</span>
+                        <span id="incomeTaxResult">$0.00</span>
+                    </summary>
+                    <div id="incomeTaxBreakdown"></div>
+                </details>
             </div>
             <div class="result-row">
                 <span>Total After Tax:</span>
@@ -447,6 +452,17 @@
             const preTaxIncomeNeeded = (totalAfterTax / afterTaxIncome) * annualIncome;
             const incomeTaxOnNeeded = preTaxIncomeNeeded - (preTaxIncomeNeeded / annualIncome * afterTaxIncome);
             
+            // Calculate individual tax components for the needed income
+            const federalTaxOnNeeded = calculateTax(preTaxIncomeNeeded, incomeTaxBrackets.federal);
+            let provincialTaxOnNeeded = 0;
+            if (incomeTaxBrackets.provincial[province]) {
+                provincialTaxOnNeeded = calculateTax(preTaxIncomeNeeded, incomeTaxBrackets.provincial[province]);
+            } else {
+                provincialTaxOnNeeded = preTaxIncomeNeeded * 0.10;
+            }
+            const cppOnNeeded = calculateCPP(preTaxIncomeNeeded);
+            const eiOnNeeded = calculateEI(preTaxIncomeNeeded);
+            
             document.getElementById('itemCostResult').textContent = `$${itemCost.toFixed(2)}`;
             document.getElementById('salesTaxResult').textContent = `$${salesTax.toFixed(2)}`;
             document.getElementById('incomeTaxResult').textContent = `$${incomeTaxOnNeeded.toFixed(2)}`;
@@ -456,21 +472,30 @@
             
             document.getElementById('salesTaxLabel').textContent = `Sales Tax (${salesTaxRate}%):`;
             
+            // Sales tax breakdown
             const rates = taxRates[province];
-            let breakdownHTML = '';
+            let salesBreakdownHTML = '';
             if (rates.hst > 0) {
-                breakdownHTML = `<div class="tax-breakdown-item"><span>HST (${rates.hst}%):</span><span>$${salesTax.toFixed(2)}</span></div>`;
+                salesBreakdownHTML = `<div class="tax-breakdown-item"><span>HST (${rates.hst}%):</span><span>$${salesTax.toFixed(2)}</span></div>`;
             } else {
                 const gstAmount = itemCost * (rates.gst / 100);
                 const pstAmount = itemCost * (rates.pst / 100);
                 if (rates.gst > 0) {
-                    breakdownHTML += `<div class="tax-breakdown-item"><span>GST (${rates.gst}%):</span><span>$${gstAmount.toFixed(2)}</span></div>`;
+                    salesBreakdownHTML += `<div class="tax-breakdown-item"><span>GST (${rates.gst}%):</span><span>$${gstAmount.toFixed(2)}</span></div>`;
                 }
                 if (rates.pst > 0) {
-                    breakdownHTML += `<div class="tax-breakdown-item"><span>PST (${rates.pst}%):</span><span>$${pstAmount.toFixed(2)}</span></div>`;
+                    salesBreakdownHTML += `<div class="tax-breakdown-item"><span>PST (${rates.pst}%):</span><span>$${pstAmount.toFixed(2)}</span></div>`;
                 }
             }
-            document.getElementById('salesTaxBreakdown').innerHTML = breakdownHTML;
+            document.getElementById('salesTaxBreakdown').innerHTML = salesBreakdownHTML;
+            
+            // Income tax breakdown
+            let incomeBreakdownHTML = '';
+            incomeBreakdownHTML += `<div class="tax-breakdown-item"><span>Federal Tax:</span><span>$${federalTaxOnNeeded.toFixed(2)}</span></div>`;
+            incomeBreakdownHTML += `<div class="tax-breakdown-item"><span>Provincial Tax:</span><span>$${provincialTaxOnNeeded.toFixed(2)}</span></div>`;
+            incomeBreakdownHTML += `<div class="tax-breakdown-item"><span>CPP:</span><span>$${cppOnNeeded.toFixed(2)}</span></div>`;
+            incomeBreakdownHTML += `<div class="tax-breakdown-item"><span>EI:</span><span>$${eiOnNeeded.toFixed(2)}</span></div>`;
+            document.getElementById('incomeTaxBreakdown').innerHTML = incomeBreakdownHTML;
             
             document.getElementById('results').classList.remove('hidden');
         }
