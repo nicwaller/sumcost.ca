@@ -627,11 +627,26 @@
             }
         }
 
+        function saveIncomeToStorage(income) {
+            localStorage.setItem('sumcost-annual-income', income);
+        }
+
+        function loadIncomeFromStorage() {
+            const savedIncome = localStorage.getItem('sumcost-annual-income');
+            if (savedIncome) {
+                document.getElementById('income').value = savedIncome;
+            }
+        }
+
         function handleFormChange() {
             const itemCost = parseFloat(document.getElementById('itemCost').value);
             const province = document.getElementById('province').value;
             const annualIncome = parseFloat(document.getElementById('income').value);
             const includeSalesTax = document.getElementById('includeSalesTax').checked;
+            
+            if (annualIncome) {
+                saveIncomeToStorage(annualIncome);
+            }
             
             if (itemCost && province && annualIncome) {
                 updateURL(itemCost, province, annualIncome, includeSalesTax);
@@ -654,7 +669,10 @@
         document.getElementById('income').addEventListener('input', handleFormChange);
         document.getElementById('includeSalesTax').addEventListener('change', handleFormChange);
 
-        window.addEventListener('load', loadFromURL);
+        window.addEventListener('load', function() {
+            loadIncomeFromStorage();
+            loadFromURL();
+        });
         
         function handleDetailsExpansion() {
             const isLandscape = window.matchMedia('(orientation: landscape) and (min-width: 800px)').matches;
