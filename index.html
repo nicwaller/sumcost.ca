@@ -325,24 +325,20 @@
             </fieldset>
         </form>
 
-<!--        <p>This is the additional amount you need to earn to pay income tax at your marginal rate.</p>-->
-<!--        <div class="outputs">-->
-<!--            <div class="result-row muted" id="federal-tax-row">-->
-<!--                <span>Federal Tax</span>-->
-<!--                <output id="federal-tax" class="dollars">0.00</output>-->
-<!--            </div>-->
-<!--            <div class="result-row muted" id="provincial-tax-row">-->
-<!--                <span>Provincial Tax</span>-->
-<!--                <output id="provincial-tax" class="dollars">0.00</output>-->
-<!--            </div>-->
-<!--            <div class="result-row" id="income-tax-row">-->
-<!--                <span>Total Income Tax</span>-->
-<!--                <output id="income-tax" class="dollars">0.00</output>-->
-<!--            </div>-->
-<!--        </div>-->
-
         <p>Total amount you need to earn to pay for this purchase.</p>
         <div class="outputs">
+            <div class="result-row muted" id="subtotal-2-row">
+                <span>Subtotal</span>
+                <output id="subtotal-2" class="dollars">0.00</output>
+            </div>
+            <div class="result-row muted" id="federal-tax-row">
+                <span>Federal Tax</span>
+                <output id="federal-tax" class="dollars">0.00</output>
+            </div>
+            <div class="result-row muted" id="provincial-tax-row">
+                <span>Provincial Tax</span>
+                <output id="provincial-tax" class="dollars">0.00</output>
+            </div>
             <div class="result-row" id="required-earnings-row">
                 <span>Required Earnings</span>
                 <output id="required-earnings" class="dollars">0.00</output>
@@ -513,30 +509,32 @@
         }
 
         // TODO: verify this function
-        function combineBrackets(b1, b2) {
+        function combineBrackets(fedBrackets, provBrackets) {
             let comboBracket = []
             let i = 0;
             let j = 0;
-            let b1Current = b1[i];
-            let b2Current = b2[j];
+            let fedBracketCurrent = fedBrackets[i];
+            let provBracketCurrent = provBrackets[j];
             let threshold = 0;
-            let rate = 0.0;
-            for (; i < b1.length && j < b2.length;) {
-                b1Current = b1[i];
-                b2Current = b2[j];
+            // assume that brackets are sorted in ascending order
+            for (; i < fedBrackets.length && j < provBrackets.length;) {
+                fedBracketCurrent = fedBrackets[i];
+                provBracketCurrent = provBrackets[j];
                 let newThreshold = -1;
-                if (b1Current.max < b2Current.max) {
-                    newThreshold = b1Current.max;
+                if (fedBracketCurrent.max < provBracketCurrent.max) {
+                    newThreshold = fedBracketCurrent.max;
                     i++;
                 } else {
-                    newThreshold = b2Current.max;
+                    newThreshold = provBracketCurrent.max;
                     j++;
                 }
 
                 comboBracket.push({
                     min: threshold,
                     max: newThreshold,
-                    rate: b1Current.rate + b2Current.rate,
+                    rate: fedBracketCurrent.rate + provBracketCurrent.rate,
+                    fedRate: fedBracketCurrent.rate,
+                    provRate: provBracketCurrent.rate,
                 });
 
                 threshold = newThreshold;
@@ -544,8 +542,12 @@
             return comboBracket;
         }
 
-        function calculateMarginalTax(expense, income, brackets) {
-            let tax = 0;
+        function calculateRequiredEarningsAndTax(expense, income, brackets) {
+            let result = {
+                requiredEarnings: 0.0,
+                federalTax: 0.0,
+                provincialTax: 0.0,
+            };
             // assume that brackets are sorted in ascending order
             for (let i = brackets.length - 1; i >= 0; i--) {
                 const bracket = brackets[i];
@@ -566,27 +568,24 @@
                 const expenseInBracket = Math.min(bracketNetIncome, expense);
                 expense -= expenseInBracket;
 
-                const taxOnExpense = expenseInBracket / (1.0 - bracket.rate);
-                console.log(taxOnExpense);
-                tax += taxOnExpense;
+                const usedEarningsInBracket = expenseInBracket / (1.0 - bracket.rate);
+                result.requiredEarnings += usedEarningsInBracket;
+                result.federalTax += (usedEarningsInBracket * bracket.fedRate);
+                result.provincialTax += (usedEarningsInBracket * bracket.provRate);
             }
-            return tax;
+            console.log(result);
+            return result;
         }
 
         const federalBrackets = incomeTaxBrackets.federal;
         const provinceBrackets = incomeTaxBrackets.provincial[province];
 
         let brackets = combineBrackets(federalBrackets, provinceBrackets);
-        const requiredEarnings = calculateMarginalTax(subtotal, annualIncome, brackets);
-        // const federalTax = 0.0;
-        // const provincialTax = 0.0;
-        // const totalIncomeTax = federalTax + provincialTax;
-        // document.getElementById('federal-tax').textContent = `${federalTax.toFixed(2)}`;
-        // document.getElementById('provincial-tax').textContent = `${provincialTax.toFixed(2)}`;
-        // document.getElementById('income-tax').textContent = `${totalIncomeTax.toFixed(2)}`;
-
-        // const requiredEarnings = subtotal + totalIncomeTax;
-        document.getElementById('required-earnings').textContent = `${requiredEarnings.toFixed(2)}`;
+        const calc = calculateRequiredEarningsAndTax(subtotal, annualIncome, brackets);
+        document.getElementById('subtotal-2').textContent = `${subtotal.toFixed(2)}`;
+        document.getElementById('federal-tax').textContent = `${calc.federalTax.toFixed(2)}`;
+        document.getElementById('provincial-tax').textContent = `${calc.provincialTax.toFixed(2)}`;
+        document.getElementById('required-earnings').textContent = `${calc.requiredEarnings.toFixed(2)}`;
 
         timeFormDidChange();
         retirementFormDidChange();
