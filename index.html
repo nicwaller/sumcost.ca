@@ -322,6 +322,19 @@
             <fieldset>
                 <label for="income">Gross Annual Income ($)</label>
                 <input type="number" id="income" value="60000" min="0" step="10000" inputmode="numeric" required>
+                <div id="income-warning" style="display: none">
+                    <p>
+                        ⚠️Warning: the purchase subtotal is more than your annual disposable income.
+                        This calculator is not designed to amortize large expenses over multiple years, so the results are invalid.
+                    </p>
+
+                    <div class="outputs">
+                        <div class="result-row muted" id="disposable-income-row">
+                            <span>Disposable Income</span>
+                            <output id="disposable-income" class="dollars">0.00</output>
+                        </div>
+                    </div>
+                </div>
             </fieldset>
         </form>
 
@@ -508,6 +521,15 @@
             localStorage.setItem('sumcost-annual-income', annualIncome.toFixed(0));
         }
 
+        const federalBrackets = incomeTaxBrackets.federal;
+        const provinceBrackets = incomeTaxBrackets.provincial[province];
+
+        let brackets = combineBrackets(federalBrackets, provinceBrackets);
+        const disposableIncome = calculateDisposableIncome(annualIncome, brackets);
+
+        document.getElementById('income-warning').style.display = (subtotal > disposableIncome ? 'block' : 'none');
+        document.getElementById('disposable-income').textContent = disposableIncome.toFixed(2);
+
         // TODO: verify this function
         function combineBrackets(fedBrackets, provBrackets) {
             let comboBracket = []
@@ -542,6 +564,30 @@
             return comboBracket;
         }
 
+        function calculateDisposableIncome(income, brackets) {
+            let disposable = 0.0;
+            // assume that brackets are sorted in ascending order
+            for (let i = brackets.length - 1; i >= 0; i--) {
+                const bracket = brackets[i];
+
+                if (income < bracket.min) {
+                    continue
+                }
+                if (income <= 0.0) {
+                    break
+                }
+
+                const bracketGrossIncome = income - bracket.min;
+                income -= bracketGrossIncome;
+
+                const bracketTaxPayable = bracketGrossIncome * bracket.rate;
+                const bracketNetIncome = bracketGrossIncome - bracketTaxPayable;
+
+                disposable += bracketNetIncome;
+            }
+            return disposable;
+        }
+
         function calculateRequiredEarningsAndTax(expense, income, brackets) {
             let result = {
                 requiredEarnings: 0.0,
@@ -573,13 +619,10 @@
                 result.federalTax += (usedEarningsInBracket * bracket.fedRate);
                 result.provincialTax += (usedEarningsInBracket * bracket.provRate);
             }
+            result.requiredEarnings += expense;
             return result;
         }
 
-        const federalBrackets = incomeTaxBrackets.federal;
-        const provinceBrackets = incomeTaxBrackets.provincial[province];
-
-        let brackets = combineBrackets(federalBrackets, provinceBrackets);
         const calc = calculateRequiredEarningsAndTax(subtotal, annualIncome, brackets);
         document.getElementById('subtotal-2').textContent = `${subtotal.toFixed(2)}`;
         document.getElementById('federal-tax').textContent = `${calc.federalTax.toFixed(2)}`;
