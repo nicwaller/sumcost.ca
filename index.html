@@ -325,21 +325,21 @@
             </fieldset>
         </form>
 
-        <p>This is the additional amount you need to earn to pay income tax at your marginal rate.</p>
-        <div class="outputs">
-            <div class="result-row muted" id="federal-tax-row">
-                <span>Federal Tax</span>
-                <output id="federal-tax" class="dollars">0.00</output>
-            </div>
-            <div class="result-row muted" id="provincial-tax-row">
-                <span>Provincial Tax</span>
-                <output id="provincial-tax" class="dollars">0.00</output>
-            </div>
-            <div class="result-row" id="income-tax-row">
-                <span>Total Income Tax</span>
-                <output id="income-tax" class="dollars">0.00</output>
-            </div>
-        </div>
+<!--        <p>This is the additional amount you need to earn to pay income tax at your marginal rate.</p>-->
+<!--        <div class="outputs">-->
+<!--            <div class="result-row muted" id="federal-tax-row">-->
+<!--                <span>Federal Tax</span>-->
+<!--                <output id="federal-tax" class="dollars">0.00</output>-->
+<!--            </div>-->
+<!--            <div class="result-row muted" id="provincial-tax-row">-->
+<!--                <span>Provincial Tax</span>-->
+<!--                <output id="provincial-tax" class="dollars">0.00</output>-->
+<!--            </div>-->
+<!--            <div class="result-row" id="income-tax-row">-->
+<!--                <span>Total Income Tax</span>-->
+<!--                <output id="income-tax" class="dollars">0.00</output>-->
+<!--            </div>-->
+<!--        </div>-->
 
         <p>Total amount you need to earn to pay for this purchase.</p>
         <div class="outputs">
@@ -507,21 +507,59 @@
             localStorage.setItem('sumcost-annual-income', annualIncome.toFixed(0));
         }
 
+        // TODO: verify this function
+        function combineBrackets(b1, b2) {
+            let comboBracket = []
+            let i = 0;
+            let j = 0;
+            let b1Current = b1[i];
+            let b2Current = b2[j];
+            let threshold = 0;
+            let rate = 0.0;
+            for (; i < b1.length && j < b2.length;) {
+                b1Current = b1[i];
+                b2Current = b2[j];
+                let newThreshold = -1;
+                if (b1Current.max < b2Current.max) {
+                    newThreshold = b1Current.max;
+                    i++;
+                } else {
+                    newThreshold = b2Current.max;
+                    j++;
+                }
+
+                comboBracket.push({
+                    min: threshold,
+                    max: newThreshold,
+                    rate: b1Current.rate + b2Current.rate,
+                });
+
+                threshold = newThreshold;
+            }
+            return comboBracket;
+        }
+
         function calculateMarginalTax(expense, income, brackets) {
             let tax = 0;
             // assume that brackets are sorted in ascending order
             for (let i = brackets.length - 1; i >= 0; i--) {
                 const bracket = brackets[i];
+
                 if (income < bracket.min) {
                     continue
                 }
-                const incomeInBracket = income - bracket.min
-                const expenseInBracket = Math.min(incomeInBracket, expense);
-                const taxInBracket = expenseInBracket * bracket.rate;
-                tax += taxInBracket;
 
-                income -= incomeInBracket;
+                const bracketGrossIncome = income - bracket.min;
+                income -= bracketGrossIncome;
+
+                const bracketTaxPayable = bracketGrossIncome * bracket.rate;
+                const bracketNetIncome = bracketGrossIncome - bracketTaxPayable;
+
+                const expenseInBracket = Math.min(bracketNetIncome, expense);
                 expense -= expenseInBracket;
+
+                const taxOnExpense = expenseInBracket / (1.0 - bracket.rate);
+                tax += taxOnExpense;
             }
             return tax;
         }
@@ -529,14 +567,16 @@
         const federalBrackets = incomeTaxBrackets.federal;
         const provinceBrackets = incomeTaxBrackets.provincial[province];
 
-        const federalTax = calculateMarginalTax(subtotal, annualIncome, federalBrackets);
-        const provincialTax = calculateMarginalTax(subtotal, annualIncome, provinceBrackets)
-        const totalIncomeTax = federalTax + provincialTax;
-        document.getElementById('federal-tax').textContent = `${federalTax.toFixed(2)}`;
-        document.getElementById('provincial-tax').textContent = `${provincialTax.toFixed(2)}`;
-        document.getElementById('income-tax').textContent = `${totalIncomeTax.toFixed(2)}`;
+        let brackets = combineBrackets(federalBrackets, provinceBrackets);
+        const requiredEarnings = calculateMarginalTax(subtotal, annualIncome, brackets);
+        // const federalTax = 0.0;
+        // const provincialTax = 0.0;
+        // const totalIncomeTax = federalTax + provincialTax;
+        // document.getElementById('federal-tax').textContent = `${federalTax.toFixed(2)}`;
+        // document.getElementById('provincial-tax').textContent = `${provincialTax.toFixed(2)}`;
+        // document.getElementById('income-tax').textContent = `${totalIncomeTax.toFixed(2)}`;
 
-        const requiredEarnings = subtotal + totalIncomeTax;
+        // const requiredEarnings = subtotal + totalIncomeTax;
         document.getElementById('required-earnings').textContent = `${requiredEarnings.toFixed(2)}`;
 
         timeFormDidChange();
@@ -552,8 +592,6 @@
         const daysWorkedPerYear = parseFloat(document.getElementById('days-worked').value);
 
         const percentOfYear = requiredEarnings / annualIncome;
-        console.log(requiredEarnings);
-        console.log(annualIncome);
         const workingDaysRequired = percentOfYear * daysWorkedPerYear;
         const calendarDaysRequired = percentOfYear * 365.0;
         document.getElementById('required-working-days').textContent = `${workingDaysRequired.toFixed(1)}`;
