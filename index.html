@@ -373,6 +373,29 @@
             <span id="required-calendar-days">0.0</span>
         </div>
     </section>
+
+    <section>
+        <h1>Time Value of Money</h1>
+        <p>How many years until you retire? This shows the opportunity cost of your purchase in terms of foregone retirement savings.</p>
+
+        <form id="retirementForm">
+            <fieldset>
+                <label for="years-to-retirement">Years to Retirement</label>
+                <input id="years-to-retirement" type="number" value="30" min="0" max="50" step="5" inputmode="numeric" required>
+            </fieldset>
+            <fieldset>
+                <label for="expected-return">Expected Annual Return (%)</label>
+                <input id="expected-return" type="number" value="7" min="0" max="15" step="0.5" inputmode="decimal" required>
+            </fieldset>
+        </form>
+
+        <p>This is how much retirement savings you would forego by making this purchase instead of investing.</p>
+
+        <div class="result-row">
+            <span>Foregone Retirement Savings:</span>
+            <output id="foregone-savings" class="dollars">0.00</output>
+        </div>
+    </section>
 </main>
 
 <footer class="footer">
@@ -517,6 +540,7 @@
         document.getElementById('required-earnings').textContent = `${requiredEarnings.toFixed(2)}`;
 
         timeFormDidChange();
+        retirementFormDidChange();
     }
 
     document.getElementById('income').addEventListener('input', incomeFormDidChange);
@@ -538,6 +562,21 @@
 
     document.getElementById('days-worked').addEventListener('input', timeFormDidChange);
     document.getElementById('timeForm').addEventListener('submit', timeFormDidChange);
+
+    function retirementFormDidChange() {
+        const requiredEarnings = parseFloat(document.getElementById('required-earnings').textContent) || 0.0;
+        const yearsToRetirement = parseFloat(document.getElementById('years-to-retirement').value) || 30;
+        const expectedReturn = parseFloat(document.getElementById('expected-return').value) / 100.0 || 0.07;
+
+        // Calculate compound growth: FV = PV * (1 + r)^n
+        const foregoneRetirementSavings = requiredEarnings * Math.pow(1 + expectedReturn, yearsToRetirement);
+        
+        document.getElementById('foregone-savings').textContent = `${foregoneRetirementSavings.toFixed(2)}`;
+    }
+
+    document.getElementById('years-to-retirement').addEventListener('input', retirementFormDidChange);
+    document.getElementById('expected-return').addEventListener('input', retirementFormDidChange);
+    document.getElementById('retirementForm').addEventListener('submit', retirementFormDidChange);
 
     function loadFromStorage() {
         const savedIncome = localStorage.getItem('sumcost-annual-income');
