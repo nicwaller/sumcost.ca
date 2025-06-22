@@ -548,6 +548,9 @@
                 if (income < bracket.min) {
                     continue
                 }
+                if (expense <= 0) {
+                    break;
+                }
 
                 const bracketGrossIncome = income - bracket.min;
                 income -= bracketGrossIncome;
@@ -559,6 +562,7 @@
                 expense -= expenseInBracket;
 
                 const taxOnExpense = expenseInBracket / (1.0 - bracket.rate);
+                console.log(taxOnExpense);
                 tax += taxOnExpense;
             }
             return tax;
