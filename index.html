@@ -4,69 +4,73 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>SumCost.ca - True Cost Calculator for Canadian Taxes</title>
-    <meta name="description" content="Calculate the true cost of purchases in Canada including income tax, CPP, EI, and sales tax. See how much you need to earn before taxes to afford any purchase.">
-    <meta name="keywords" content="Canadian tax calculator, income tax, sales tax, GST, PST, HST, CPP, EI, cost calculator, true cost, Canada">
+    <meta name="description"
+          content="Calculate the true cost of purchases in Canada including income tax, CPP, EI, and sales tax. See how much you need to earn before taxes to afford any purchase.">
+    <meta name="keywords"
+          content="Canadian tax calculator, income tax, sales tax, GST, PST, HST, CPP, EI, cost calculator, true cost, Canada">
     <meta name="author" content="SumCost.ca">
     <meta name="robots" content="index, follow">
-    
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="SumCost.ca - True Cost Calculator for Canadian Taxes">
-    <meta property="og:description" content="Calculate the true cost of purchases in Canada including income tax, CPP, EI, and sales tax. See how much you need to earn before taxes to afford any purchase.">
+    <meta property="og:description"
+          content="Calculate the true cost of purchases in Canada including income tax, CPP, EI, and sales tax. See how much you need to earn before taxes to afford any purchase.">
     <meta property="og:url" content="https://sumcost.ca">
     <meta property="og:site_name" content="SumCost.ca">
     <meta property="og:image" content="https://sumcost.ca/ogpreview.jpg">
-    
+
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="SumCost.ca - True Cost Calculator for Canadian Taxes">
-    <meta name="twitter:description" content="Calculate the true cost of purchases in Canada including income tax, CPP, EI, and sales tax. See how much you need to earn before taxes to afford any purchase.">
+    <meta name="twitter:description"
+          content="Calculate the true cost of purchases in Canada including income tax, CPP, EI, and sales tax. See how much you need to earn before taxes to afford any purchase.">
     <meta name="twitter:image" content="https://sumcost.ca/twitter-card-image.jpg">
-    
+
     <!-- Canonical URL -->
     <link rel="canonical" href="https://sumcost.ca">
-    
+
     <!-- Additional SEO -->
-    <meta name="theme-color" content="#667eea">
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#667eea">
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#2d3748">
     <meta name="application-name" content="SumCost.ca">
-    
+
     <!-- GitHub and Repository Info -->
     <meta name="repository-url" content="https://github.com/nicwaller/sumcost.ca">
     <meta name="source-code" content="https://github.com/nicwaller/sumcost.ca">
-    
+
     <!-- Language and Region -->
     <meta name="language" content="en-CA">
     <meta name="geo.region" content="CA">
-    
+
     <!-- PWA/Mobile App -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="SumCost">
-    
+
     <!-- JSON-LD Structured Data -->
     <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "WebApplication",
-        "name": "SumCost.ca",
-        "description": "Calculate the true cost of purchases in Canada including income tax, CPP, EI, and sales tax",
-        "url": "https://sumcost.ca",
-        "applicationCategory": "FinanceApplication",
-        "operatingSystem": "Web Browser",
-        "offers": {
-            "@type": "Offer",
-            "price": "0",
-            "priceCurrency": "CAD"
-        },
-        "codeRepository": "https://github.com/nicwaller/sumcost.ca"
-    }
+        {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "SumCost.ca",
+            "description": "Calculate the true cost of purchases in Canada including income tax, CPP, EI, and sales tax",
+            "url": "https://sumcost.ca",
+            "applicationCategory": "FinanceApplication",
+            "operatingSystem": "Web Browser",
+            "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "CAD"
+            },
+            "codeRepository": "https://github.com/nicwaller/sumcost.ca"
+        }
     </script>
     <style>
         :root {
-            --bg-gradient-start: #667eea;
-            --bg-gradient-end: #764ba2;
+            --bg: #667eea;
             --card-bg: white;
-            --card-shadow: rgba(0,0,0,0.1);
+            --card-shadow: rgba(0, 0, 0, 0.1);
             --text-primary: #333;
             --text-secondary: #555;
             --text-muted: #666;
@@ -76,13 +80,12 @@
             --border-separator: #ddd;
             --border-dotted: #ccc;
         }
-        
+
         @media (prefers-color-scheme: dark) {
             :root {
-                --bg-gradient-start: #2d3748;
-                --bg-gradient-end: #4a5568;
+                --bg: #2d3748;
                 --card-bg: #1a202c;
-                --card-shadow: rgba(0,0,0,0.3);
+                --card-shadow: rgba(0, 0, 0, 0.3);
                 --text-primary: #f7fafc;
                 --text-secondary: #a0aec0;
                 --text-muted: #a0aec0;
@@ -93,224 +96,155 @@
                 --border-dotted: #718096;
             }
         }
-        
-        * {
+
+        html, body, fieldset {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
-        
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
-            min-height: 100vh;
+            padding-left: max(20px, 1.5 * env(safe-area-inset-left));
+            padding-right: max(20px, 1.5 * env(safe-area-inset-right));
+
             display: flex;
             flex-direction: column;
             align-items: flex-start;
             justify-content: center;
-            padding-left: env(safe-area-inset-left, 0);
-            padding-right: env(safe-area-inset-right, 0);
+
+            background: var(--bg);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: var(--text-primary);
         }
-        
-        
+
         main {
+            padding-top: 2em;
+            padding-bottom: 2em;
+            width: 100%;
+
             display: flex;
             flex-direction: row;
             flex-wrap: wrap;
             justify-content: center;
             gap: 30px;
-            width: 100%;
-            padding-top: 2em;
-            padding-bottom: 2em;
-            section {
-                flex-grow: 1;
-            }
         }
 
-        /*@media (orientation: landscape) and (min-width: 800px) {*/
-        /*    main {*/
-        /*        flex-direction: row;*/
-        /*    }*/
-        /*}*/
+        main > section {
+            flex-grow: 1;
+        }
 
-        .form-section {
+        section {
+            padding: 30px;
+            /*flex-basis: 20em;*/
             min-width: 20em;
+
             background: var(--card-bg);
             border-radius: 20px;
             box-shadow: 0 20px 40px var(--card-shadow);
-            padding: 40px;
-        }
-        
-        .results-section {
-            min-width: 20em;
-            background: var(--card-bg);
-            border-radius: 20px;
-            box-shadow: 0 20px 40px var(--card-shadow);
-            padding: 40px;
         }
 
-        @media (max-width: 480px) {
-            body {
-                padding: 20px 10px;
-            }
-            
-            .form-section, .results-section {
-                padding: 30px 20px;
-            }
-            
-            h1 {
-                font-size: 1.5em;
-            }
-        }
-        
         h1 {
-            text-align: center;
-            color: var(--text-primary);
-            margin-bottom: 30px;
-            font-size: 2em;
+            margin: 0;
+            font-size: 200%;
         }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--text-secondary);
-        }
-        
-        input, select {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-            background: var(--card-bg);
-            color: var(--text-primary);
-        }
-        
-        input:focus, select:focus {
-            outline: none;
-            border-color: var(--border-focus);
-        }
-        
-        input[type="checkbox"] {
-            width: auto;
-            margin-right: 8px;
-            transform: scale(1.2);
-        }
-        
-        .calculate-btn {
-            width: 100%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 15px;
-            font-size: 18px;
-            font-weight: 600;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-        
-        .calculate-btn:hover {
-            transform: translateY(-2px);
-        }
-        
-        .flourish {
-            animation: valueFlourish 0.8s ease-out;
-        }
-        
-        @keyframes valueFlourish {
-            0% {
-                transform: scale(1);
-                color: inherit;
+
+        form {
+            fieldset {
+                margin-top: 2ex;
+                border: 0;
             }
-            25% {
-                transform: scale(1.1);
-                color: #667eea;
-                text-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+
+            label {
+                display: flex;
+                align-items: center;
+                margin-bottom: 1ex;
+
+                font-weight: 600;
             }
-            75% {
-                transform: scale(1.05);
-                color: #667eea;
-                text-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
+
+            /* Chrome, Safari, Edge, Opera */
+
+            input::-webkit-outer-spin-button,
+            input::-webkit-inner-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
             }
-            100% {
-                transform: scale(1);
-                color: inherit;
-                text-shadow: none;
+
+            /* Firefox */
+
+            input[type=number] {
+                -moz-appearance: textfield;
+            }
+
+            input[type=number], select {
+                box-sizing: border-box;
+                width: 100%;
+                padding: 2ex;
+
+                border: 2px solid var(--border-color);
+                border-radius: 8px;
+                font-size: 16px;
+                background: var(--card-bg);
+                color: var(--text-primary);
+            }
+
+            input:focus, select:focus {
+                outline: none;
+                border-color: var(--border-focus);
+            }
+
+            input[type="checkbox"] {
+                width: auto;
+                margin-right: 1ex;
+                transform: scale(1.3);
             }
         }
-        
-        .results {
-            padding: 20px;
-            border-radius: 12px;
-        }
-        
+
         .result-row {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px;
-            padding: 5px 0;
         }
-        
-        .result-row {
-            color: var(--text-primary);
+        .muted {
+            color: var(--text-muted);
         }
-        
-        .result-row:last-child {
-            margin-bottom: 0;
-            border-top: 2px solid var(--border-separator);
-            padding-top: 15px;
-            margin-top: 15px;
-            font-weight: bold;
-            font-size: 1.1em;
+        .dollars:before {
+            content: "$";
         }
-        
+
         details {
             width: 100%;
         }
-        
+
         summary {
             display: flex;
             justify-content: space-between;
             cursor: pointer;
             list-style: none;
             padding: 2px 0;
-            border-bottom: 1px dotted var(--border-dotted);
         }
-        
+
         summary::-webkit-details-marker {
             display: none;
         }
-        
-        #salesTaxBreakdown, #incomeTaxBreakdown {
-            padding: 10px 0 0 20px;
-            font-size: 0.9em;
-            color: var(--text-muted);
-        }
-        
-        .tax-breakdown-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 5px;
-        }
-        
-        .hidden {
-            display: none;
-        }
-        
+
+        /*#salesTaxBreakdown, #incomeTaxBreakdown {*/
+        /*    padding: 10px 0 0 20px;*/
+        /*    font-size: 0.9em;*/
+        /*    color: var(--text-muted);*/
+        /*}*/
+
+        /*.tax-breakdown-item {*/
+        /*    display: flex;*/
+        /*    justify-content: space-between;*/
+        /*    margin-bottom: 5px;*/
+        /*}*/
+
         footer {
             width: 100%;
             text-align: center;
-            margin-top: 1em;
-            padding: 1em;
             font-size: 14px;
+            margin-bottom: 3em;
             color: var(--text-secondary);
+
             a {
                 color: inherit;
             }
@@ -318,396 +252,312 @@
     </style>
 </head>
 <body>
-    <main>
-        <section class="form-section">
-            <h1>SumCost.ca</h1>
-            <p style="text-align: center; color: var(--text-muted); margin-bottom: 30px;">Calculate the true cost of your purchases</p>
-            
-            <form id="costForm">
-                <div class="form-group">
-                    <label for="itemCost">Item Cost ($)</label>
-                    <input type="number" id="itemCost" step="0.01" min="0" inputmode="decimal" required>
-                </div>
+<main>
+    <section>
+        <h1>Purchase</h1>
+        <p>How much is your intended purchase?</p>
 
-                <div class="form-group">
-                    <label>
-                        <input type="checkbox" id="includeSalesTax" checked>
-                        Include Sales Tax
-                    </label>
-                </div>
+        <form id="purchaseForm">
+            <fieldset>
+                <label for="purchasePrice">Purchase Price ($)</label>
+                <input type="number" id="purchasePrice" value="1000.00" step="100.00" min="0" inputmode="decimal" required autofocus>
+            </fieldset>
 
-                <div class="form-group">
-                    <label for="income">Annual Income ($)</label>
-                    <input type="number" id="income" min="0" inputmode="numeric" required>
-                </div>
+            <fieldset>
+                <label for="province">Province</label>
+                <select id="province" required>
+                    <option value="AB">Alberta</option>
+                    <option value="BC" selected>British Columbia</option>
+                    <option value="MB">Manitoba</option>
+                    <option value="NB">New Brunswick</option>
+                    <option value="NL">Newfoundland and Labrador</option>
+                    <option value="NT">Northwest Territories</option>
+                    <option value="NS">Nova Scotia</option>
+                    <option value="NU">Nunavut</option>
+                    <option value="ON">Ontario</option>
+                    <option value="PE">Prince Edward Island</option>
+                    <option value="QC">Quebec</option>
+                    <option value="SK">Saskatchewan</option>
+                    <option value="YT">Yukon</option>
+                </select>
+            </fieldset>
 
-                <div class="form-group">
-                    <label for="province">Province</label>
-                    <select id="province" required>
-                        <option value="">Select your province</option>
-                        <option value="AB">Alberta</option>
-                        <option value="BC" selected>British Columbia</option>
-                        <option value="MB">Manitoba</option>
-                        <option value="NB">New Brunswick</option>
-                        <option value="NL">Newfoundland and Labrador</option>
-                        <option value="NT">Northwest Territories</option>
-                        <option value="NS">Nova Scotia</option>
-                        <option value="NU">Nunavut</option>
-                        <option value="ON">Ontario</option>
-                        <option value="PE">Prince Edward Island</option>
-                        <option value="QC">Quebec</option>
-                        <option value="SK">Saskatchewan</option>
-                        <option value="YT">Yukon</option>
-                    </select>
-                </div>
+            <fieldset>
+                <label for="includeSalesTax">
+                    <input type="checkbox" id="includeSalesTax" checked>
+                    Add Sales Tax
+                </label>
+            </fieldset>
+        </form>
 
-                <button type="submit" class="calculate-btn">Calculate True Cost</button>
-            </form>
-            
-        </section>
-        
-        <section class="results-section">
-            <div id="results" class="results hidden">
-                <div class="result-row">
-                    <span>Item Cost:</span>
-                    <span id="itemCostResult">$0.00</span>
-                </div>
-                <div class="result-row">
-                    <details>
-                        <summary>
-                            <span id="salesTaxLabel">Sales Tax:</span>
-                            <span id="salesTaxResult">$0.00</span>
-                        </summary>
-                        <div id="salesTaxBreakdown"></div>
-                    </details>
-                </div>
-                <div class="result-row">
-                    <details>
-                        <summary>
-                            <span>Income Tax:</span>
-                            <span id="incomeTaxResult">$0.00</span>
-                        </summary>
-                        <div id="incomeTaxBreakdown"></div>
-                    </details>
-                </div>
-                <div class="result-row">
-                    <span>Total After Tax:</span>
-                    <span id="totalAfterTaxResult">$0.00</span>
-                </div>
-                <div class="result-row">
-                    <span>Hours to Work:</span>
-                    <span id="hoursToWorkResult">0.0</span>
-                </div>
-                <div class="result-row">
-                    <span>Pre-Tax Income Needed:</span>
-                    <span id="preTaxIncomeResult">$0.00</span>
-                </div>
+        <div class="outputs">
+            <div class="result-row muted" id="gst-row">
+                <span>GST</span>
+                <output id="GST" class="dollars">0.00</output>
             </div>
-            <div id="resultsPlaceholder" class="results">
-                <h2 style="text-align: center; color: var(--text-primary); margin-bottom: 25px; font-size: 1.5em;">Calculation Results</h2>
-                <p style="text-align: center; color: var(--text-placeholder); font-style: italic;">Fill out the form to see your calculation results here</p>
+            <div class="result-row muted" id="pst-row">
+                <span>PST</span>
+                <output id="PST" class="dollars">0.00</output>
             </div>
-        </section>
-    </main>
+            <div class="result-row muted" id="hst-row">
+                <span>HST</span>
+                <output id="HST" class="dollars">0.00</output>
+            </div>
+            <div class="result-row" id="sales-tax-row">
+                <span>Sales Tax:</span>
+                <output id="salesTax" class="dollars">0.00</output>
+            </div>
+            <div class="result-row">
+                <span>Subtotal</span>
+                <output id="subtotal" class="dollars">0.00</output>
+            </div>
+        </div>
+    </section>
 
-    <footer class="footer">
-        <p>Open source • <a href="https://github.com/nicwaller/sumcost.ca" target="_blank" rel="noopener">View on GitHub</a></p>
-    </footer>
+    <section>
+        <h1>Income Tax</h1>
+        <p>What is your gross annual income? (how much you are paid before subtracting taxes)</p>
 
-    <script>
-        const taxRates = {
-            'AB': { gst: 5, pst: 0, hst: 0 },
-            'BC': { gst: 5, pst: 7, hst: 0 },
-            'MB': { gst: 5, pst: 7, hst: 0 },
-            'NB': { gst: 0, pst: 0, hst: 15 },
-            'NL': { gst: 0, pst: 0, hst: 15 },
-            'NT': { gst: 5, pst: 0, hst: 0 },
-            'NS': { gst: 0, pst: 0, hst: 15 },
-            'NU': { gst: 5, pst: 0, hst: 0 },
-            'ON': { gst: 0, pst: 0, hst: 13 },
-            'PE': { gst: 0, pst: 0, hst: 15 },
-            'QC': { gst: 5, pst: 9.975, hst: 0 },
-            'SK': { gst: 5, pst: 6, hst: 0 },
-            'YT': { gst: 5, pst: 0, hst: 0 }
-        };
+        <form id="incomeForm">
+            <fieldset>
+                <label for="income">Gross Annual Income ($)</label>
+                <input type="number" id="income" min="0" step="10000" inputmode="numeric" required>
+            </fieldset>
+        </form>
 
-        const incomeTaxBrackets = {
-            federal: [
-                { min: 0, max: 55867, rate: 0.15 },
-                { min: 55867, max: 111733, rate: 0.205 },
-                { min: 111733, max: 173205, rate: 0.26 },
-                { min: 173205, max: 246752, rate: 0.29 },
-                { min: 246752, max: Infinity, rate: 0.33 }
+        <p>This is the additional amount you need to earn to pay income tax at your marginal rate.</p>
+        <div class="outputs">
+            <div class="result-row muted" id="federal-tax-row">
+                <span>Federal Tax</span>
+                <output id="federal-tax" class="dollars">0.00</output>
+            </div>
+            <div class="result-row muted" id="provincial-tax-row">
+                <span>Provincial Tax</span>
+                <output id="provincial-tax" class="dollars">0.00</output>
+            </div>
+            <div class="result-row" id="income-tax-row">
+                <span>Total Income Tax</span>
+                <output id="income-tax" class="dollars">0.00</output>
+            </div>
+        </div>
+
+        <p>Total amount you need to earn to pay for this purchase.</p>
+        <div class="outputs">
+            <div class="result-row" id="required-earnings-row">
+                <span>Required Earnings</span>
+                <output id="required-earnings" class="dollars">0.00</output>
+            </div>
+        </div>
+
+    </section>
+
+    <section>
+        <h1>Time Cost</h1>
+        <p>How many days do you normally work each year? Full-time in Canada is 250 days per year.</p>
+
+        <form id="timeForm">
+            <fieldset>
+                <label for="days-worked">Days Worked</label>
+                <input id="days-worked" type="number" value="250" min="1" max="365" step="30" inputmode="numeric" required>
+            </fieldset>
+        </form>
+
+        <p>This is how long it will take to pay off that expense.</p>
+
+        <div class="result-row">
+            <span>Working Days:</span>
+            <span id="required-working-days">0.0</span>
+        </div>
+        <div class="result-row">
+            <span>Calendar Days:</span>
+            <span id="required-calendar-days">0.0</span>
+        </div>
+    </section>
+</main>
+
+<footer class="footer">
+    <p>Created by Nic Waller • <a href="https://github.com/nicwaller/sumcost.ca" target="_blank" rel="noopener">View on
+        GitHub</a></p>
+</footer>
+
+<script>
+    const salesTaxRates = {
+        'AB': {gst: 5, pst: 0, hst: 0},
+        'BC': {gst: 5, pst: 7, hst: 0},
+        'MB': {gst: 5, pst: 7, hst: 0},
+        'NB': {gst: 0, pst: 0, hst: 15},
+        'NL': {gst: 0, pst: 0, hst: 15},
+        'NT': {gst: 5, pst: 0, hst: 0},
+        'NS': {gst: 0, pst: 0, hst: 15},
+        'NU': {gst: 5, pst: 0, hst: 0},
+        'ON': {gst: 0, pst: 0, hst: 13},
+        'PE': {gst: 0, pst: 0, hst: 15},
+        'QC': {gst: 5, pst: 9.975, hst: 0},
+        'SK': {gst: 5, pst: 6, hst: 0},
+        'YT': {gst: 5, pst: 0, hst: 0}
+    };
+
+    const incomeTaxBrackets = {
+        federal: [
+            {min: 0, max: 55867, rate: 0.15},
+            {min: 55867, max: 111733, rate: 0.205},
+            {min: 111733, max: 173205, rate: 0.26},
+            {min: 173205, max: 246752, rate: 0.29},
+            {min: 246752, max: Infinity, rate: 0.33}
+        ],
+        provincial: {
+            'AB': [
+                {min: 0, max: 148269, rate: 0.10},
+                {min: 148269, max: 177922, rate: 0.12},
+                {min: 177922, max: 237675, rate: 0.13},
+                {min: 237675, max: 355513, rate: 0.14},
+                {min: 355513, max: Infinity, rate: 0.15}
             ],
-            provincial: {
-                'AB': [
-                    { min: 0, max: 148269, rate: 0.10 },
-                    { min: 148269, max: 177922, rate: 0.12 },
-                    { min: 177922, max: 237675, rate: 0.13 },
-                    { min: 237675, max: 355513, rate: 0.14 },
-                    { min: 355513, max: Infinity, rate: 0.15 }
-                ],
-                'BC': [
-                    { min: 0, max: 47937, rate: 0.0506 },
-                    { min: 47937, max: 95875, rate: 0.077 },
-                    { min: 95875, max: 110076, rate: 0.105 },
-                    { min: 110076, max: 133664, rate: 0.1229 },
-                    { min: 133664, max: 181232, rate: 0.147 },
-                    { min: 181232, max: Infinity, rate: 0.168 }
-                ],
-                'ON': [
-                    { min: 0, max: 51446, rate: 0.0505 },
-                    { min: 51446, max: 102894, rate: 0.0915 },
-                    { min: 102894, max: 150000, rate: 0.1116 },
-                    { min: 150000, max: 220000, rate: 0.1216 },
-                    { min: 220000, max: Infinity, rate: 0.1316 }
-                ],
-                'QC': [
-                    { min: 0, max: 49275, rate: 0.14 },
-                    { min: 49275, max: 98540, rate: 0.19 },
-                    { min: 98540, max: 119910, rate: 0.24 },
-                    { min: 119910, max: Infinity, rate: 0.2575 }
-                ]
-            }
-        };
+            'BC': [
+                {min: 0, max: 47937, rate: 0.0506},
+                {min: 47937, max: 95875, rate: 0.077},
+                {min: 95875, max: 110076, rate: 0.105},
+                {min: 110076, max: 133664, rate: 0.1229},
+                {min: 133664, max: 181232, rate: 0.147},
+                {min: 181232, max: Infinity, rate: 0.168}
+            ],
+            'ON': [
+                {min: 0, max: 51446, rate: 0.0505},
+                {min: 51446, max: 102894, rate: 0.0915},
+                {min: 102894, max: 150000, rate: 0.1116},
+                {min: 150000, max: 220000, rate: 0.1216},
+                {min: 220000, max: Infinity, rate: 0.1316}
+            ],
+            'QC': [
+                {min: 0, max: 49275, rate: 0.14},
+                {min: 49275, max: 98540, rate: 0.19},
+                {min: 98540, max: 119910, rate: 0.24},
+                {min: 119910, max: Infinity, rate: 0.2575}
+            ]
+        }
+    };
 
-        function calculateTax(income, brackets) {
+    function purchaseFormDidChange() {
+        const purchasePrice = parseFloat(document.getElementById('purchasePrice').value) || 0.0;
+        const includeSalesTax = document.getElementById('includeSalesTax').checked;
+        const province = document.getElementById('province').value;
+
+        if (province) {
+            localStorage.setItem('sumcost-province', province);
+        }
+
+        const gstRate = includeSalesTax ? salesTaxRates[province].gst / 100.0 : 0;
+        const pstRate = includeSalesTax ? salesTaxRates[province].pst / 100.0 : 0;
+        const hstRate = includeSalesTax ? salesTaxRates[province].hst / 100.0 : 0;
+
+        const gst = gstRate * purchasePrice;
+        const pst = pstRate * purchasePrice;
+        const hst = hstRate * purchasePrice;
+
+        const salesTax = gst + pst + hst;
+        const subtotal = purchasePrice + salesTax;
+
+        document.getElementById('gst-row').style.display = (gstRate === 0 ? 'none' : 'flex');
+        document.getElementById('pst-row').style.display = (pstRate === 0 ? 'none' : 'flex');
+        document.getElementById('hst-row').style.display = (hstRate === 0 ? 'none' : 'flex');
+        document.getElementById('sales-tax-row').style.display = (includeSalesTax ? 'flex' : 'none');
+        document.getElementById('GST').textContent = `${gst.toFixed(2)}`;
+        document.getElementById('PST').textContent = `${pst.toFixed(2)}`;
+        document.getElementById('HST').textContent = `${hst.toFixed(2)}`;
+        document.getElementById('salesTax').textContent = `${salesTax.toFixed(2)}`;
+        document.getElementById('subtotal').textContent = `${subtotal.toFixed(2)}`;
+
+        incomeFormDidChange();
+    }
+
+    document.getElementById('purchasePrice').addEventListener('input', purchaseFormDidChange);
+    document.getElementById('province').addEventListener('change', purchaseFormDidChange);
+    document.getElementById('includeSalesTax').addEventListener('change', purchaseFormDidChange);
+    document.getElementById('purchaseForm').addEventListener('submit', purchaseFormDidChange);
+
+    function incomeFormDidChange() {
+        const subtotal = parseFloat(document.getElementById('subtotal').textContent) || 0.0;
+        const annualIncome = parseFloat(document.getElementById('income').value);
+        const province = document.getElementById('province').value;
+
+        if (annualIncome) {
+            localStorage.setItem('sumcost-annual-income', annualIncome.toFixed(0));
+        }
+
+        function calculateMarginalTax(expense, income, brackets) {
             let tax = 0;
-            for (const bracket of brackets) {
-                if (income > bracket.min) {
-                    const taxableInBracket = Math.min(income - bracket.min, bracket.max - bracket.min);
-                    tax += taxableInBracket * bracket.rate;
+            // assume that brackets are sorted in ascending order
+            for (let i = brackets.length - 1; i >= 0; i--) {
+                const bracket = brackets[i];
+                if (income < bracket.min) {
+                    continue
                 }
+                const incomeInBracket = income - bracket.min
+                const expenseInBracket = Math.min(incomeInBracket, expense);
+                const taxInBracket = expenseInBracket * bracket.rate;
+                tax += taxInBracket;
+
+                income -= incomeInBracket;
+                expense -= expenseInBracket;
             }
             return tax;
         }
 
-        function calculateCPP(grossIncome) {
-            const cppMaxPensionable = 68500;
-            const cppBasicExemption = 3500;
-            const cppRate = 0.0595;
-            
-            const pensionableIncome = Math.min(grossIncome, cppMaxPensionable) - cppBasicExemption;
-            return Math.max(0, pensionableIncome * cppRate);
+        const federalBrackets = incomeTaxBrackets.federal;
+        const provinceBrackets = incomeTaxBrackets.provincial[province];
+
+        const federalTax = calculateMarginalTax(subtotal, annualIncome, federalBrackets);
+        const provincialTax = calculateMarginalTax(subtotal, annualIncome, provinceBrackets)
+        const totalIncomeTax = federalTax + provincialTax;
+        document.getElementById('federal-tax').textContent = `${federalTax.toFixed(2)}`;
+        document.getElementById('provincial-tax').textContent = `${provincialTax.toFixed(2)}`;
+        document.getElementById('income-tax').textContent = `${totalIncomeTax.toFixed(2)}`;
+
+        const requiredEarnings = subtotal + totalIncomeTax;
+        document.getElementById('required-earnings').textContent = `${requiredEarnings.toFixed(2)}`;
+
+        timeFormDidChange();
+    }
+
+    document.getElementById('income').addEventListener('input', incomeFormDidChange);
+    document.getElementById('incomeForm').addEventListener('submit', incomeFormDidChange);
+
+    function timeFormDidChange() {
+        const requiredEarnings = parseFloat(document.getElementById('required-earnings').textContent) || 0.0;
+        const annualIncome = parseFloat(document.getElementById('income').value);
+        const daysWorkedPerYear = parseFloat(document.getElementById('days-worked').value);
+
+        const percentOfYear = requiredEarnings / annualIncome;
+        console.log(requiredEarnings);
+        console.log(annualIncome);
+        const workingDaysRequired = percentOfYear * daysWorkedPerYear;
+        const calendarDaysRequired = percentOfYear * 365.0;
+        document.getElementById('required-working-days').textContent = `${workingDaysRequired.toFixed(1)}`;
+        document.getElementById('required-calendar-days').textContent = `${calendarDaysRequired.toFixed(1)}`;
+    }
+
+    document.getElementById('days-worked').addEventListener('input', timeFormDidChange);
+    document.getElementById('timeForm').addEventListener('submit', timeFormDidChange);
+
+    function loadFromStorage() {
+        const savedIncome = localStorage.getItem('sumcost-annual-income');
+        if (savedIncome) {
+            document.getElementById('income').value = savedIncome;
         }
 
-        function calculateEI(grossIncome) {
-            const eiMaxInsurable = 66600;
-            const eiRate = 0.0229;
-            
-            const insurableIncome = Math.min(grossIncome, eiMaxInsurable);
-            return insurableIncome * eiRate;
+        const savedProvince = localStorage.getItem('sumcost-province');
+        if (savedProvince) {
+            document.getElementById('province').value = savedProvince;
         }
+    }
 
-        function calculateAfterTaxIncome(grossIncome, province) {
-            const federalTax = calculateTax(grossIncome, incomeTaxBrackets.federal);
-            let provincialTax = 0;
-            
-            if (incomeTaxBrackets.provincial[province]) {
-                provincialTax = calculateTax(grossIncome, incomeTaxBrackets.provincial[province]);
-            } else {
-                provincialTax = grossIncome * 0.10;
-            }
-            
-            const cppContribution = calculateCPP(grossIncome);
-            const eiContribution = calculateEI(grossIncome);
-            
-            return grossIncome - federalTax - provincialTax - cppContribution - eiContribution;
-        }
+    window.addEventListener('load', function () {
+        loadFromStorage();
+        purchaseFormDidChange();
+    });
 
-        function calculateSalesTax(amount, province) {
-            const rates = taxRates[province];
-            if (rates.hst > 0) {
-                return amount * (rates.hst / 100);
-            } else {
-                return amount * ((rates.gst + rates.pst) / 100);
-            }
-        }
-
-        function getSalesTaxRate(province) {
-            const rates = taxRates[province];
-            if (rates.hst > 0) {
-                return rates.hst;
-            } else {
-                return rates.gst + rates.pst;
-            }
-        }
-
-        function runCalculation(itemCost, province, annualIncome, includeSalesTax = true) {
-            const salesTax = includeSalesTax ? calculateSalesTax(itemCost, province) : 0;
-            const salesTaxRate = getSalesTaxRate(province);
-            const totalAfterTax = itemCost + salesTax;
-            
-            const afterTaxIncome = calculateAfterTaxIncome(annualIncome, province);
-            const totalTaxOnIncome = annualIncome - afterTaxIncome;
-            const hourlyAfterTaxIncome = afterTaxIncome / (40 * 52);
-            const hoursToWork = totalAfterTax / hourlyAfterTaxIncome;
-            
-            const preTaxIncomeNeeded = (totalAfterTax / afterTaxIncome) * annualIncome;
-            const incomeTaxOnNeeded = preTaxIncomeNeeded - (preTaxIncomeNeeded / annualIncome * afterTaxIncome);
-            
-            // Calculate individual tax components for the needed income
-            const federalTaxOnNeeded = calculateTax(preTaxIncomeNeeded, incomeTaxBrackets.federal);
-            let provincialTaxOnNeeded = 0;
-            if (incomeTaxBrackets.provincial[province]) {
-                provincialTaxOnNeeded = calculateTax(preTaxIncomeNeeded, incomeTaxBrackets.provincial[province]);
-            } else {
-                provincialTaxOnNeeded = preTaxIncomeNeeded * 0.10;
-            }
-            const cppOnNeeded = calculateCPP(preTaxIncomeNeeded);
-            const eiOnNeeded = calculateEI(preTaxIncomeNeeded);
-            
-            document.getElementById('itemCostResult').textContent = `$${itemCost.toFixed(2)}`;
-            document.getElementById('salesTaxResult').textContent = `$${salesTax.toFixed(2)}`;
-            document.getElementById('incomeTaxResult').textContent = `$${incomeTaxOnNeeded.toFixed(2)}`;
-            document.getElementById('totalAfterTaxResult').textContent = `$${totalAfterTax.toFixed(2)}`;
-            document.getElementById('hoursToWorkResult').textContent = hoursToWork.toFixed(1);
-            document.getElementById('preTaxIncomeResult').textContent = `$${preTaxIncomeNeeded.toFixed(2)}`;
-            
-            if (includeSalesTax) {
-                document.getElementById('salesTaxLabel').textContent = `Sales Tax (${salesTaxRate}%):`;
-                
-                // Sales tax breakdown
-                const rates = taxRates[province];
-                let salesBreakdownHTML = '';
-                if (rates.hst > 0) {
-                    salesBreakdownHTML = `<div class="tax-breakdown-item"><span>HST (${rates.hst}%):</span><span>$${salesTax.toFixed(2)}</span></div>`;
-                } else {
-                    const gstAmount = itemCost * (rates.gst / 100);
-                    const pstAmount = itemCost * (rates.pst / 100);
-                    if (rates.gst > 0) {
-                        salesBreakdownHTML += `<div class="tax-breakdown-item"><span>GST (${rates.gst}%):</span><span>$${gstAmount.toFixed(2)}</span></div>`;
-                    }
-                    if (rates.pst > 0) {
-                        salesBreakdownHTML += `<div class="tax-breakdown-item"><span>PST (${rates.pst}%):</span><span>$${pstAmount.toFixed(2)}</span></div>`;
-                    }
-                }
-                document.getElementById('salesTaxBreakdown').innerHTML = salesBreakdownHTML;
-            } else {
-                document.getElementById('salesTaxLabel').textContent = `Sales Tax:`;
-                document.getElementById('salesTaxBreakdown').innerHTML = '<div class="tax-breakdown-item"><span>Disabled</span></div>';
-            }
-            
-            // Income tax breakdown
-            let incomeBreakdownHTML = '';
-            incomeBreakdownHTML += `<div class="tax-breakdown-item"><span>Federal Tax:</span><span>$${federalTaxOnNeeded.toFixed(2)}</span></div>`;
-            incomeBreakdownHTML += `<div class="tax-breakdown-item"><span>Provincial Tax:</span><span>$${provincialTaxOnNeeded.toFixed(2)}</span></div>`;
-            incomeBreakdownHTML += `<div class="tax-breakdown-item"><span>CPP:</span><span>$${cppOnNeeded.toFixed(2)}</span></div>`;
-            incomeBreakdownHTML += `<div class="tax-breakdown-item"><span>EI:</span><span>$${eiOnNeeded.toFixed(2)}</span></div>`;
-            document.getElementById('incomeTaxBreakdown').innerHTML = incomeBreakdownHTML;
-            
-            document.getElementById('results').classList.remove('hidden');
-            document.getElementById('resultsPlaceholder').classList.add('hidden');
-        }
-
-        function updateURL(itemCost, province, annualIncome, includeSalesTax) {
-            const params = new URLSearchParams();
-            params.set('cost', itemCost);
-            params.set('province', province);
-            params.set('income', annualIncome);
-            params.set('salesTax', includeSalesTax);
-            
-            const newURL = window.location.pathname + '#' + params.toString();
-            window.history.pushState({}, '', newURL);
-        }
-
-        function loadFromURL() {
-            const hash = window.location.hash.substring(1);
-            const params = new URLSearchParams(hash);
-            const cost = params.get('cost');
-            const province = params.get('province');
-            const income = params.get('income');
-            const salesTax = params.get('salesTax');
-            
-            if (cost && province && income) {
-                document.getElementById('itemCost').value = cost;
-                document.getElementById('province').value = province;
-                document.getElementById('income').value = income;
-                document.getElementById('includeSalesTax').checked = salesTax !== 'false';
-                
-                runCalculation(parseFloat(cost), province, parseFloat(income), salesTax !== 'false');
-            }
-        }
-
-        function saveIncomeToStorage(income) {
-            localStorage.setItem('sumcost-annual-income', income);
-        }
-
-        function loadIncomeFromStorage() {
-            const savedIncome = localStorage.getItem('sumcost-annual-income');
-            if (savedIncome) {
-                document.getElementById('income').value = savedIncome;
-            }
-        }
-
-        function saveProvinceToStorage(province) {
-            localStorage.setItem('sumcost-province', province);
-        }
-
-        function loadProvinceFromStorage() {
-            const savedProvince = localStorage.getItem('sumcost-province');
-            if (savedProvince) {
-                document.getElementById('province').value = savedProvince;
-            }
-        }
-
-        function handleFormChange() {
-            const itemCost = parseFloat(document.getElementById('itemCost').value);
-            const province = document.getElementById('province').value;
-            const annualIncome = parseFloat(document.getElementById('income').value);
-            const includeSalesTax = document.getElementById('includeSalesTax').checked;
-            
-            if (annualIncome) {
-                saveIncomeToStorage(annualIncome);
-            }
-            
-            if (province) {
-                saveProvinceToStorage(province);
-            }
-            
-            if (itemCost && province && annualIncome) {
-                updateURL(itemCost, province, annualIncome, includeSalesTax);
-                runCalculation(itemCost, province, annualIncome, includeSalesTax);
-            }
-        }
-
-        document.getElementById('costForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            handleFormChange();
-            
-            const preTaxElement = document.getElementById('preTaxIncomeResult');
-            preTaxElement.classList.add('flourish');
-            setTimeout(() => preTaxElement.classList.remove('flourish'), 800);
-        });
-
-        document.getElementById('itemCost').addEventListener('input', handleFormChange);
-        document.getElementById('province').addEventListener('change', handleFormChange);
-        document.getElementById('income').addEventListener('input', handleFormChange);
-        document.getElementById('includeSalesTax').addEventListener('change', handleFormChange);
-
-        window.addEventListener('load', function() {
-            loadIncomeFromStorage();
-            loadProvinceFromStorage();
-            loadFromURL();
-        });
-        
-        function handleDetailsExpansion() {
-            const isLandscape = window.matchMedia('(orientation: landscape) and (min-width: 800px)').matches;
-            const detailsElements = document.querySelectorAll('details');
-            
-            detailsElements.forEach(details => {
-                if (isLandscape) {
-                    details.setAttribute('open', '');
-                } else {
-                    details.removeAttribute('open');
-                }
-            });
-        }
-        
-        window.addEventListener('resize', handleDetailsExpansion);
-        window.addEventListener('orientationchange', handleDetailsExpansion);
-        window.addEventListener('load', handleDetailsExpansion);
-    </script>
+    // window.addEventListener('resize', doSomething);
+    // window.addEventListener('orientationchange', doSomething);
+</script>
 </body>
 </html>
